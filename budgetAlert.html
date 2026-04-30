@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Budget Alerts — Smart Finance</title>
+  
+  <link rel="stylesheet" href="assets/css/Base.css">
+  <link rel="stylesheet" href="assets/css/budgetAlerts.css">
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="navbar__inner">
+      <a href="Dashboard.html" class="navbar__logo">
+        <div class="navbar__logo-icon">SF</div>
+        Smart Finance
+      </a>
+      
+      <ul class="navbar__links">
+        <li><a href="Dashboard.html" class="navbar__link">Dashboard</a></li>
+        <li><a href="budgetAlert.html" class="navbar__link active">Budget Alerts</a></li>
+        <li><a href="savingGoals.html" class="navbar__link">Savings Goals</a></li>
+        <li><a href="Reports.html" class="navbar__link">Reports</a></li>
+      </ul>
+
+      <div class="navbar__right">
+        <button class="navbar__bell-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+            <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+          </svg>
+          <span class="navbar__badge"></span>
+        </button>
+        <div class="navbar__avatar">MM</div>
+        <span class="navbar__user-name">Mariam</span>
+      </div>
+    </div>
+  </nav>
+
+  <main class="page-wrapper">
+    <header class="page-header">
+      <div class="page-header__text">
+        <h1>Budget Alerts</h1>
+        <p>April 2025 &mdash; <strong>3 active alerts</strong></p>
+      </div>
+      <button class="btn btn-outline" id="mark-all-read-btn">Mark all as read</button>
+    </header>
+
+    <section class="stats-grid">
+      <div class="stat-card">
+        <p class="stat-card__label">Active alerts</p>
+        <p class="stat-card__value">3</p>
+        <p class="stat-card__sub new-today">2 new today</p>
+      </div>
+      <div class="stat-card">
+        <p class="stat-card__label">Budgets on track</p>
+        <p class="stat-card__value">5</p>
+        <p class="stat-card__sub all-healthy">all healthy</p>
+      </div>
+      <div class="stat-card">
+        <p class="stat-card__label">Total budget</p>
+        <p class="stat-card__value blue">$1,200</p>
+        <p class="stat-card__sub muted">this month</p>
+      </div>
+      <div class="stat-card">
+        <p class="stat-card__label">Total spent</p>
+        <p class="stat-card__value green">$854</p>
+        <p class="stat-card__sub muted">71% of budget</p>
+      </div>
+    </section>
+
+    <div class="content-card">
+      <div class="content-card__header">
+        <h2>Notifications</h2>
+      </div>
+      <div class="content-card__body">
+
+        <!-- 1. Groceries -->
+        <article class="notification-item unread">
+          <div class="notif-icon warning">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+              <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+            </svg>
+          </div>
+          <div class="notif-body">
+            <div class="notif-body__top">
+              <span class="notif-body__title">Groceries &mdash; Near Limit</span>
+              <span class="badge badge-warning">87% used</span>
+            </div>
+            <p class="notif-body__desc">You've used $174 of your $200 monthly budget &mdash; $26 remaining</p>
+            <div class="progress-wrap">
+              <div class="progress-bar-track"><div class="progress-bar-fill warning" style="width:87%"></div></div>
+              <span class="progress-label warning">$26 left</span>
+            </div>
+          </div>
+          <time class="notif-time">Today 10:32 AM</time>
+        </article>
+
+        <!-- 2. Dining Out -->
+        <article class="notification-item unread">
+          <div class="notif-icon danger">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/>
+              <line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/>
+            </svg>
+          </div>
+          <div class="notif-body">
+            <div class="notif-body__top">
+              <span class="notif-body__title">Dining Out &mdash; Exceeded</span>
+              <span class="badge badge-danger">115% &mdash; exceeded by $45</span>
+            </div>
+            <p class="notif-body__desc">Your $300 dining budget has been exceeded this month</p>
+            <div class="progress-wrap">
+              <div class="progress-bar-track"><div class="progress-bar-fill danger" style="width:100%"></div></div>
+              <span class="progress-label danger">&minus;$45 over</span>
+            </div>
+          </div>
+          <time class="notif-time">Yesterday 8:15 PM</time>
+        </article>
+
+        <!-- 3. Transport -->
+        <article class="notification-item">
+          <div class="notif-icon success">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+              <polyline points="22 4 12 14.01 9 11.01"/>
+            </svg>
+          </div>
+          <div class="notif-body">
+            <div class="notif-body__top">
+              <span class="notif-body__title">Transport &mdash; On Track</span>
+              <span class="badge badge-success">42% used</span>
+            </div>
+            <p class="notif-body__desc">$42 spent of $100 budget &mdash; looking good this month</p>
+            <div class="progress-wrap">
+              <div class="progress-bar-track"><div class="progress-bar-fill success" style="width:42%"></div></div>
+              <span class="progress-label success">$58 left</span>
+            </div>
+          </div>
+          <time class="notif-time">Apr 26</time>
+        </article>
+
+      </div>
+    </div>
+  </main>
+  
+  <script>
+    document.getElementById('mark-all-read-btn').addEventListener('click', function () {
+      document.querySelectorAll('.notification-item.unread').forEach(function (el) {
+        el.classList.remove('unread');
+      });
+      this.disabled = true;
+      this.textContent = 'All read ✓';
+    });
+  </script>
+
+</body>
+</html>

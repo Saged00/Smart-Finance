@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard — Smart Finance</title>
+  
+  <!-- Django template tag placeholder -->
+  <!-- {% load static %} -->
+  <link rel="stylesheet" href="assets/css/Base.css">
+  <link rel="stylesheet" href="assets/css/Dashboard.css">
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="navbar__inner">
+      <a href="Dashboard.html" class="navbar__logo">
+        <div class="navbar__logo-icon">SF</div>
+        Smart Finance
+      </a>
+      
+      <ul class="navbar__links">
+        <li><a href="Dashboard.html" class="navbar__link active">Dashboard</a></li>
+        <li><a href="budgetAlert.html" class="navbar__link">Budget Alerts</a></li>
+        <li><a href="savingGoals.html" class="navbar__link">Savings Goals</a></li>
+        <li><a href="Reports.html" class="navbar__link">Reports</a></li>
+      </ul>
+
+      <div class="navbar__right">
+        <button class="navbar__bell-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+            <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+          </svg>
+          <span class="navbar__badge"></span>
+        </button>
+        <div class="navbar__avatar">MM</div>
+        <span class="navbar__user-name">Mariam</span>
+      </div>
+    </div>
+  </nav>
+
+  <main class="page-wrapper">
+    <header class="page-header">
+      <div class="page-header__text">
+        <h1>Welcome back, Mariam</h1>
+        <p>Here is your financial overview for this month.</p>
+      </div>
+      <button class="btn btn-primary">
+        + Add Transaction
+      </button>
+    </header>
+
+    <div class="dashboard-stats">
+      <div class="dash-card">
+        <div class="dash-card__title">Total Balance</div>
+        <div class="dash-card__amount">$8,450.00</div>
+        <div class="dash-card__desc">+2.5% from last month</div>
+      </div>
+      <div class="dash-card">
+        <div class="dash-card__title">Monthly Expenses</div>
+        <div class="dash-card__amount">$3,240.50</div>
+        <div class="dash-card__desc" style="color: var(--danger)">+5% from last month</div>
+      </div>
+      <div class="dash-card">
+        <div class="dash-card__title">Savings Goal Progress</div>
+        <div class="dash-card__amount">$1,200.00</div>
+        <div class="dash-card__desc">On track</div>
+      </div>
+    </div>
+
+    <div class="dashboard-grid">
+      <div class="content-box">
+        <h2>Income vs Expenses (Placeholder)</h2>
+        <div style="height: 250px; display: flex; align-items: center; justify-content: center; background: var(--bg); border-radius: var(--radius-md); color: var(--text-muted);">
+          Chart will render here
+        </div>
+      </div>
+
+      <div class="content-box">
+        <h2>Recent Transactions</h2>
+        <div class="transaction-list">
+          <div class="transaction-item">
+            <div class="tx-info">
+              <h4>Grocery Store</h4>
+              <p>Today, 10:30 AM</p>
+            </div>
+            <div class="tx-amount negative">-$85.00</div>
+          </div>
+          <div class="transaction-item">
+            <div class="tx-info">
+              <h4>Salary Deposit</h4>
+              <p>Yesterday, 09:00 AM</p>
+            </div>
+            <div class="tx-amount positive">+$4,500.00</div>
+          </div>
+          <div class="transaction-item">
+            <div class="tx-info">
+              <h4>Netflix Subscription</h4>
+              <p>Apr 28, 2025</p>
+            </div>
+            <div class="tx-amount negative">-$15.99</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+</body>
+</html>
