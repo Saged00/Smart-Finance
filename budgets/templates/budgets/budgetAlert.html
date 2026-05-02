@@ -1,0 +1,114 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Budget Alerts — Smart Finance</title>
+  <link rel="stylesheet" href="{% static 'css/Base.css' %}">
+  <link rel="stylesheet" href="{% static 'css/budgetAlerts.css' %}">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="navbar__inner">
+      <a href="{% url 'dashboard' %}" class="navbar__logo">
+        <div class="navbar__logo-icon">SF</div>Smart Finance
+      </a>
+      <ul class="navbar__links">
+        <li><a href="{% url 'dashboard' %}"     class="navbar__link">Dashboard</a></li>
+        <li><a href="{% url 'budget-alerts' %}" class="navbar__link active">Budget Alerts</a></li>
+        <li><a href="{% url 'goals' %}"         class="navbar__link">Savings Goals</a></li>
+        <li><a href="{% url 'reports' %}"       class="navbar__link">Reports</a></li>
+      </ul>
+      <div class="navbar__right">
+        <div class="navbar__avatar">{{ user.full_name|slice:":2"|upper }}</div>
+        <span class="navbar__user-name">{{ user.full_name }}</span>
+        <a href="{% url 'logout' %}" style="font-size:.85rem;color:#6b7280;margin-left:12px;">Logout</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="page-wrapper">
+    <header class="page-header">
+      <div class="page-header__text">
+        <h1>Budget Alerts</h1>
+        <p>{{ alerts.count }} active alert{{ alerts.count|pluralize }}</p>
+      </div>
+    </header>
+
+    <section class="stats-grid">
+      <div class="stat-card">
+        <p class="stat-card__label">Active alerts</p>
+        <p class="stat-card__value">{{ alerts.count }}</p>
+      </div>
+      <div class="stat-card">
+        <p class="stat-card__label">Total budget</p>
+        <p class="stat-card__value blue">${{ total_budget }}</p>
+      </div>
+      <div class="stat-card">
+        <p class="stat-card__label">Total spent</p>
+        <p class="stat-card__value green">${{ total_spent }}</p>
+      </div>
+      <div class="stat-card">
+        <p class="stat-card__label">Budgets tracked</p>
+        <p class="stat-card__value">{{ budgets.count }}</p>
+      </div>
+    </section>
+
+    <div class="content-card">
+      <div class="content-card__header"><h2>Notifications</h2></div>
+      <div class="content-card__body">
+        {% for alert in alerts %}
+        <article class="notification-item unread">
+          <div class="notif-icon
+            {% if alert.budget.status == 'exceeded' %}danger
+            {% elif alert.budget.status == 'near_limit' %}warning
+            {% else %}success{% endif %}">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+              <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+            </svg>
+          </div>
+          <div class="notif-body">
+            <div class="notif-body__top">
+              <span class="notif-body__title">{{ alert.budget.category }} —
+                {% if alert.budget.status == 'exceeded' %}Exceeded
+                {% elif alert.budget.status == 'near_limit' %}Near Limit
+                {% else %}On Track{% endif %}
+              </span>
+              <span class="badge
+                {% if alert.budget.status == 'exceeded' %}badge-danger
+                {% elif alert.budget.status == 'near_limit' %}badge-warning
+                {% else %}badge-success{% endif %}">
+                {{ alert.budget.get_percentage_used|floatformat:0 }}% used
+              </span>
+            </div>
+            <p class="notif-body__desc">{{ alert.message }}</p>
+            <div class="progress-wrap">
+              <div class="progress-bar-track">
+                <div class="progress-bar-fill
+                  {% if alert.budget.status == 'exceeded' %}danger
+                  {% elif alert.budget.status == 'near_limit' %}warning
+                  {% else %}success{% endif %}"
+                  style="width:{{ alert.budget.get_percentage_used|floatformat:0 }}%">
+                </div>
+              </div>
+              <span class="progress-label
+                {% if alert.budget.status == 'exceeded' %}danger
+                {% elif alert.budget.status == 'near_limit' %}warning
+                {% else %}success{% endif %}">
+                ${{ alert.budget.get_remaining }} left
+              </span>
+            </div>
+          </div>
+          <time class="notif-time">{{ alert.triggered_at|date:"M d, H:i" }}</time>
+        </article>
+        {% empty %}
+        <p style="text-align:center;padding:40px;color:var(--text-muted);">
+          No alerts yet — all budgets are healthy! 🎉
+        </p>
+        {% endfor %}
+      </div>
+    </div>
+  </main>
+</body>
+</html>

@@ -1,0 +1,147 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Savings Goals — Smart Finance</title>
+  <link rel="stylesheet" href="{% static 'css/Base.css' %}">
+  <link rel="stylesheet" href="{% static 'css/savingGoals.css' %}">
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="navbar__inner">
+      <a href="{% url 'dashboard' %}" class="navbar__logo">
+        <div class="navbar__logo-icon">SF</div>Smart Finance
+      </a>
+      <ul class="navbar__links">
+        <li><a href="{% url 'dashboard' %}"     class="navbar__link">Dashboard</a></li>
+        <li><a href="{% url 'budget-alerts' %}" class="navbar__link">Budget Alerts</a></li>
+        <li><a href="{% url 'goals' %}"         class="navbar__link active">Savings Goals</a></li>
+        <li><a href="{% url 'reports' %}"       class="navbar__link">Reports</a></li>
+      </ul>
+      <div class="navbar__right">
+        <div class="navbar__avatar">{{ user.full_name|slice:":2"|upper }}</div>
+        <span class="navbar__user-name">{{ user.full_name }}</span>
+        <a href="{% url 'logout' %}" style="font-size:.85rem;color:#6b7280;margin-left:12px;">Logout</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="page-wrapper">
+    <header class="page-header">
+      <div class="page-header__text">
+        <h1>Savings Goals</h1>
+        <p>Track and manage your savings targets</p>
+      </div>
+    </header>
+
+    <div class="goals-layout">
+
+      <!-- LEFT: Form -->
+      <aside>
+        <div class="form-card">
+          <h2>Create new goal</h2>
+          <form method="POST">
+            {% csrf_token %}
+            {% if form.errors %}
+            <div style="color:#e02424;font-size:.85rem;margin-bottom:12px;
+                        padding:10px;background:#fde8e8;border-radius:8px;">
+              {% for field in form %}
+                {% for error in field.errors %}{{ error }}<br>{% endfor %}
+              {% endfor %}
+            </div>
+            {% endif %}
+
+            <div class="form-group">
+              <label>Goal name</label>
+              <input type="text" name="goal_name" class="form-control"
+                     placeholder="Summer Vacation"
+                     value="{{ form.goal_name.value|default:'' }}" required>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label>Target amount ($)</label>
+                <input type="number" name="target_amount" class="form-control"
+                       placeholder="5000"
+                       value="{{ form.target_amount.value|default:'' }}"
+                       step="0.01" required>
+              </div>
+              <div class="form-group">
+                <label>Initial amount ($)</label>
+                <input type="number" name="current_amount" class="form-control"
+                       placeholder="0"
+                       value="{{ form.current_amount.value|default:'0' }}"
+                       step="0.01">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Deadline</label>
+              <input type="date" name="deadline" class="form-control"
+                     value="{{ form.deadline.value|default:'' }}">
+            </div>
+
+            <div class="hint-box">
+              Create your goal and we'll calculate the monthly savings needed automatically.
+            </div>
+
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary">Create Goal</button>
+              <a href="{% url 'dashboard' %}" class="btn btn-outline">Cancel</a>
+            </div>
+          </form>
+        </div>
+      </aside>
+
+      <!-- RIGHT: List -->
+      <section>
+        <div class="goals-list-card">
+          <h2>My goals</h2>
+
+          {% for goal in goals %}
+          <article class="goal-item">
+            <div class="goal-item__top">
+              <span class="goal-item__name">{{ goal.goal_name }}</span>
+              <span class="goal-item__pct {{ goal.get_progress_color }}">
+                {{ goal.get_progress_percent }}% complete
+              </span>
+            </div>
+            <p class="goal-item__meta">
+              ${{ goal.current_amount }} saved of ${{ goal.target_amount }} target
+              {% if goal.deadline %} — deadline {{ goal.deadline|date:"M Y" }}{% endif %}
+            </p>
+            {% if goal.deadline %}
+            <p class="goal-item__meta" style="color:var(--primary);font-weight:600;">
+              Monthly needed: ${{ goal.get_monthly_savings_needed }}
+            </p>
+            {% endif %}
+            <div class="progress-wrap">
+              <div class="progress-bar-track">
+                <div class="progress-bar-fill {{ goal.get_progress_color }}"
+                     style="width:{{ goal.get_progress_percent }}%"></div>
+              </div>
+            </div>
+            <div style="margin-top:10px;">
+              <form method="POST" action="{% url 'goal-delete' goal.pk %}" style="display:inline">
+                {% csrf_token %}
+                <button type="submit"
+                        style="font-size:.8rem;color:var(--danger);background:none;border:none;cursor:pointer;font-weight:600;"
+                        onclick="return confirm('Delete this goal?')">Delete</button>
+              </form>
+            </div>
+          </article>
+          {% empty %}
+          <p style="color:var(--text-muted);text-align:center;padding:32px;">
+            No goals yet. Create your first one!
+          </p>
+          {% endfor %}
+
+        </div>
+      </section>
+    </div>
+  </main>
+</body>
+</html>
