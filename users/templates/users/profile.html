@@ -1,0 +1,67 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>My Profile — Smart Finance</title>
+  <link rel="stylesheet" href="{% static 'css/Base.css' %}">
+  <link rel="stylesheet" href="{% static 'css/Dashboard.css' %}">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="navbar__inner">
+      <a href="{% url 'dashboard' %}" class="navbar__logo">
+        <div class="navbar__logo-icon">SF</div>Smart Finance
+      </a>
+      <ul class="navbar__links">
+        <li><a href="{% url 'dashboard' %}"      class="navbar__link">Dashboard</a></li>
+        <li><a href="{% url 'budget-alerts' %}"  class="navbar__link">Budget Alerts</a></li>
+        <li><a href="{% url 'budget-list' %}"    class="navbar__link">Budgets</a></li>
+        <li><a href="{% url 'goals' %}"          class="navbar__link">Savings Goals</a></li>
+        <li><a href="{% url 'reports' %}"        class="navbar__link">Reports</a></li>
+      </ul>
+      <div class="navbar__right">
+        <a href="{% url 'profile' %}" style="text-decoration: none; display: flex; align-items: center; gap: 8px;">
+          <div class="navbar__avatar">{{ user.full_name|slice:":2"|upper }}</div>
+          <span class="navbar__user-name">{{ user.full_name|truncatewords:1 }}</span>
+        </a>
+        <a href="{% url 'logout' %}" style="font-size:.85rem;color:#6b7280;margin-left:8px;">Logout</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="page-wrapper">
+    <header class="page-header">
+      <div class="page-header__text">
+        <h1>My Profile</h1>
+        <p>Manage your account details and preferences.</p>
+      </div>
+      <a href="{% url 'logout' %}" class="btn" style="background: var(--danger); color: white; border: none;">Logout</a>
+    </header>
+
+    <div class="dashboard-grid" style="grid-template-columns: 1fr;">
+      <div class="content-box">
+        <h2>Account Information</h2>
+        <div class="transaction-item" style="border-bottom: 1px solid var(--border); padding-bottom: 15px;">
+          <div class="tx-info">
+            <h4 style="color: var(--text-muted); margin-bottom: 5px;">Full Name</h4>
+            <p style="font-size: 1.1rem; color: var(--text);">{{ user.full_name }}</p>
+          </div>
+        </div>
+        <div class="transaction-item" style="border-bottom: 1px solid var(--border); padding-bottom: 15px;">
+          <div class="tx-info">
+            <h4 style="color: var(--text-muted); margin-bottom: 5px;">Email Address</h4>
+            <p style="font-size: 1.1rem; color: var(--text);">{{ user.email }}</p>
+          </div>
+        </div>
+        <div class="transaction-item">
+          <div class="tx-info">
+            <h4 style="color: var(--text-muted); margin-bottom: 5px;">Member Since</h4>
+            <p style="font-size: 1.1rem; color: var(--text);">{{ user.member_since|date:"F j, Y" }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</body>
+</html>
