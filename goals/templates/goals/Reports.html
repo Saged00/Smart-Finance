@@ -1,0 +1,180 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reports — Smart Finance</title>
+  <link rel="stylesheet" href="{% static 'css/Base.css' %}">
+  <link rel="stylesheet" href="{% static 'css/Reports.css' %}">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="navbar__inner">
+      <a href="{% url 'dashboard' %}" class="navbar__logo">
+        <div class="navbar__logo-icon">SF</div>Smart Finance
+      </a>
+      <ul class="navbar__links">
+        <li><a href="{% url 'dashboard' %}"     class="navbar__link">Dashboard</a></li>
+        <li><a href="{% url 'budget-alerts' %}" class="navbar__link">Budget Alerts</a></li>
+        <li><a href="{% url 'goals' %}"         class="navbar__link">Savings Goals</a></li>
+        <li><a href="{% url 'reports' %}"       class="navbar__link active">Reports</a></li>
+      </ul>
+      <div class="navbar__right">
+        <div class="navbar__avatar">{{ user.full_name|slice:":2"|upper }}</div>
+        <span class="navbar__user-name">{{ user.full_name }}</span>
+        <a href="{% url 'logout' %}" style="font-size:.85rem;color:#6b7280;margin-left:12px;">Logout</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="page-wrapper">
+    <header class="page-header">
+      <div class="page-header__text">
+        <h1>Financial Reports</h1>
+        <p>Analyze your spending and income trends.</p>
+      </div>
+    </header>
+
+    <!-- Summary Cards -->
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-bottom:32px;">
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:24px;box-shadow:var(--shadow-xs);">
+        <p style="font-size:.8rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">Total Budget</p>
+        <p style="font-size:1.8rem;font-weight:700;color:var(--primary);">${{ total_budget }}</p>
+      </div>
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:24px;box-shadow:var(--shadow-xs);">
+        <p style="font-size:.8rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">Total Spent</p>
+        <p style="font-size:1.8rem;font-weight:700;color:var(--danger);">${{ total_spent }}</p>
+      </div>
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:24px;box-shadow:var(--shadow-xs);">
+        <p style="font-size:.8rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">Remaining</p>
+        <p style="font-size:1.8rem;font-weight:700;color:var(--secondary);">${{ total_budget|add:0 }}</p>
+      </div>
+    </div>
+
+    <div class="reports-layout">
+
+      <!-- Pie Chart -->
+      <div class="report-card">
+        <h2>Monthly Spending Breakdown</h2>
+        <p>Visualize where your money goes across different categories.</p>
+        {% if budgets %}
+        <canvas id="pieChart" style="max-height:300px;"></canvas>
+        {% else %}
+        <div class="placeholder-chart">No budget data yet.</div>
+        {% endif %}
+      </div>
+
+      <!-- Bar Chart -->
+      <div class="report-card">
+        <h2>Budget vs. Spent per Category</h2>
+        <p>Compare your limits against actual spending.</p>
+        {% if budgets %}
+        <canvas id="barChart" style="max-height:300px;"></canvas>
+        {% else %}
+        <div class="placeholder-chart">No budget data yet.</div>
+        {% endif %}
+      </div>
+
+      <!-- Table -->
+      <div class="report-card" style="text-align:left;">
+        <h2>Detailed Breakdown</h2>
+        <table style="width:100%;border-collapse:collapse;font-size:.9rem;">
+          <thead>
+            <tr style="border-bottom:2px solid var(--border);">
+              <th style="padding:10px;text-align:left;color:var(--text-secondary);">Category</th>
+              <th style="padding:10px;text-align:right;color:var(--text-secondary);">Budget</th>
+              <th style="padding:10px;text-align:right;color:var(--text-secondary);">Spent</th>
+              <th style="padding:10px;text-align:right;color:var(--text-secondary);">Remaining</th>
+              <th style="padding:10px;text-align:right;color:var(--text-secondary);">Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for b in budgets %}
+            <tr style="border-bottom:1px solid var(--border-soft);">
+              <td style="padding:12px 10px;font-weight:600;">{{ b.category }}</td>
+              <td style="padding:12px 10px;text-align:right;">${{ b.budget_amount }}</td>
+              <td style="padding:12px 10px;text-align:right;color:var(--danger);">${{ b.spent_amount }}</td>
+              <td style="padding:12px 10px;text-align:right;color:var(--secondary);">${{ b.get_remaining }}</td>
+              <td style="padding:12px 10px;text-align:right;">
+                {% if b.status == 'exceeded' %}
+                  <span style="background:#fde8e8;color:#e02424;padding:3px 10px;border-radius:20px;font-size:.75rem;font-weight:600;">Exceeded</span>
+                {% elif b.status == 'near_limit' %}
+                  <span style="background:#fef3c7;color:#d97706;padding:3px 10px;border-radius:20px;font-size:.75rem;font-weight:600;">Near Limit</span>
+                {% else %}
+                  <span style="background:#def7ec;color:#0e9f6e;padding:3px 10px;border-radius:20px;font-size:.75rem;font-weight:600;">On Track</span>
+                {% endif %}
+              </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="5" style="text-align:center;padding:24px;color:var(--text-muted);">No budgets found.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </main>
+
+  <script>
+    const categories = {{ categories|safe }};
+    const spent      = {{ spent|safe }};
+    const limits     = {{ limits|safe }};
+
+    // Pie Chart
+    const pieCtx = document.getElementById('pieChart');
+    if (pieCtx) {
+      new Chart(pieCtx, {
+        type: 'doughnut',
+        data: {
+          labels: categories,
+          datasets: [{
+            data: spent,
+            backgroundColor: ['#1a56db','#0e9f6e','#d97706','#e02424','#8b5cf6','#06b6d4'],
+            borderWidth: 2,
+            borderColor: '#fff',
+          }]
+        },
+        options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
+      });
+    }
+
+    // Bar Chart
+    const barCtx = document.getElementById('barChart');
+    if (barCtx) {
+      new Chart(barCtx, {
+        type: 'bar',
+        data: {
+          labels: categories,
+          datasets: [
+            {
+              label: 'Budget Limit',
+              data: limits,
+              backgroundColor: 'rgba(26,86,219,0.2)',
+              borderColor: '#1a56db',
+              borderWidth: 2,
+              borderRadius: 6,
+            },
+            {
+              label: 'Spent',
+              data: spent,
+              backgroundColor: 'rgba(224,36,36,0.2)',
+              borderColor: '#e02424',
+              borderWidth: 2,
+              borderRadius: 6,
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          plugins: { legend: { position: 'top' } },
+          scales: { y: { beginAtZero: true } }
+        }
+      });
+    }
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,67 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>My Budgets — Smart Finance</title>
+  <link rel="stylesheet" href="{% static 'css/Base.css' %}">
+  <link rel="stylesheet" href="{% static 'css/Dashboard.css' %}">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="navbar__inner">
+      <a href="{% url 'dashboard' %}" class="navbar__logo">
+        <div class="navbar__logo-icon">SF</div>Smart Finance
+      </a>
+      <ul class="navbar__links">
+        <li><a href="{% url 'dashboard' %}"     class="navbar__link">Dashboard</a></li>
+        <li><a href="{% url 'budget-list' %}"   class="navbar__link active">Budgets</a></li>
+        <li><a href="{% url 'budget-alerts' %}" class="navbar__link">Budget Alerts</a></li>
+        <li><a href="{% url 'goals' %}"         class="navbar__link">Savings Goals</a></li>
+        <li><a href="{% url 'reports' %}"       class="navbar__link">Reports</a></li>
+      </ul>
+      <div class="navbar__right">
+        <div class="navbar__avatar">{{ user.full_name|slice:":2"|upper }}</div>
+        <span class="navbar__user-name">{{ user.full_name }}</span>
+        <a href="{% url 'logout' %}" style="font-size:.85rem;color:#6b7280;margin-left:12px;">Logout</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="page-wrapper">
+    <header class="page-header">
+      <div class="page-header__text">
+        <h1>My Budgets</h1>
+        <p>Manage your monthly spending limits.</p>
+      </div>
+      <a href="{% url 'budget-create' %}" class="btn btn-primary">+ Add Budget</a>
+    </header>
+
+    <div class="content-box">
+      <h2>All Budgets</h2>
+      {% for b in budgets %}
+      <div class="transaction-item">
+        <div class="tx-info">
+          <h4>{{ b.category }}</h4>
+          <p>${{ b.spent_amount }} spent of ${{ b.budget_amount }} — {{ b.get_status }}</p>
+        </div>
+        <div style="display:flex;gap:10px;align-items:center;">
+          <a href="{% url 'budget-edit' b.pk %}"
+             style="font-size:.85rem;color:var(--primary);font-weight:600;">Edit</a>
+          <form method="POST" action="{% url 'budget-delete' b.pk %}" style="display:inline">
+            {% csrf_token %}
+            <button type="submit"
+                    style="font-size:.85rem;color:var(--danger);background:none;border:none;font-weight:600;cursor:pointer;"
+                    onclick="return confirm('Delete this budget?')">Delete</button>
+          </form>
+        </div>
+      </div>
+      {% empty %}
+      <p style="color:var(--text-muted);text-align:center;padding:32px;">
+        No budgets yet. <a href="{% url 'budget-create' %}" style="color:var(--primary);font-weight:600;">Create your first one</a>
+      </p>
+      {% endfor %}
+    </div>
+  </main>
+</body>
+</html>

@@ -1,0 +1,64 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ action }} Budget — Smart Finance</title>
+  <link rel="stylesheet" href="{% static 'css/Base.css' %}">
+  <link rel="stylesheet" href="{% static 'css/login.css' %}">
+</head>
+<body class="auth-page">
+  <main class="auth-container" style="max-width:520px">
+    <header class="auth-header">
+      <div class="auth-logo">SF</div>
+      <h1>{{ action }} Budget</h1>
+      <p>Set a spending limit for a category.</p>
+    </header>
+    <div class="auth-body">
+      <form method="POST">
+        {% csrf_token %}
+        {% if form.errors %}
+          <div style="color:#e02424;font-size:.85rem;margin-bottom:12px;padding:10px;background:#fde8e8;border-radius:8px;">
+            {% for field in form %}{% for error in field.errors %}{{ error }}<br>{% endfor %}{% endfor %}
+          </div>
+        {% endif %}
+
+        <div class="form-group">
+          <label>Category</label>
+          <input type="text" name="category" class="form-control"
+                 placeholder="e.g. Groceries" value="{{ form.category.value|default:'' }}" required>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Budget Amount ($)</label>
+            <input type="number" name="budget_amount" class="form-control"
+                   placeholder="300" value="{{ form.budget_amount.value|default:'' }}" step="0.01" required>
+          </div>
+          <div class="form-group">
+            <label>Alert at (%)</label>
+            <input type="number" name="alert_threshold" class="form-control"
+                   value="{{ form.alert_threshold.value|default:'80' }}" min="50" max="100">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Start Date</label>
+            <input type="date" name="start_date" class="form-control"
+                   value="{{ form.start_date.value|default:'' }}" required>
+          </div>
+          <div class="form-group">
+            <label>End Date</label>
+            <input type="date" name="end_date" class="form-control"
+                   value="{{ form.end_date.value|default:'' }}" required>
+          </div>
+        </div>
+
+        <button type="submit" class="btn-auth">{{ action }} Budget</button>
+      </form>
+      <div class="auth-footer">
+        <a href="{% url 'budget-list' %}">← Back to Budgets</a>
+      </div>
+    </div>
+  </main>
+</body>
+</html>

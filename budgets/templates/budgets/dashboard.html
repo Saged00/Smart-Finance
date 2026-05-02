@@ -1,0 +1,98 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Dashboard — Smart Finance</title>
+  <link rel="stylesheet" href="{% static 'css/Base.css' %}">
+  <link rel="stylesheet" href="{% static 'css/Dashboard.css' %}">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="navbar__inner">
+      <a href="{% url 'dashboard' %}" class="navbar__logo">
+        <div class="navbar__logo-icon">SF</div>Smart Finance
+      </a>
+      <ul class="navbar__links">
+        <li><a href="{% url 'dashboard' %}"      class="navbar__link active">Dashboard</a></li>
+        <li><a href="{% url 'budget-alerts' %}"  class="navbar__link">Budget Alerts</a></li>
+        <li><a href="{% url 'budget-list' %}"    class="navbar__link">Budgets</a></li>
+        <li><a href="{% url 'goals' %}"         class="navbar__link">Savings Goals</a></li>
+        <li><a href="{% url 'reports' %}"       class="navbar__link">Reports</a></li>
+      </ul>
+      <div class="navbar__right">
+        <div class="navbar__avatar">{{ user.full_name|slice:":2"|upper }}</div>
+        <span class="navbar__user-name">{{ user.full_name|truncatewords:1 }}</span>
+        <a href="{% url 'logout' %}" style="font-size:.85rem;color:#6b7280;margin-left:8px;">Logout</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="page-wrapper">
+    <header class="page-header">
+      <div class="page-header__text">
+        <h1>Welcome back, {{ user.full_name }}</h1>
+        <p>Here is your financial overview for this month.</p>
+      </div>
+      <a href="{% url 'budget-create' %}" class="btn btn-primary">+ Add Budget</a>
+    </header>
+
+    <div class="dashboard-stats">
+      <div class="dash-card">
+        <div class="dash-card__title">Total Budgets</div>
+        <div class="dash-card__amount">{{ budgets.count }}</div>
+        <div class="dash-card__desc">active this month</div>
+      </div>
+      <div class="dash-card">
+        <div class="dash-card__title">Active Alerts</div>
+        <div class="dash-card__amount" style="color:var(--danger)">{{ alerts.count }}</div>
+        <div class="dash-card__desc" style="color:var(--danger)">need attention</div>
+      </div>
+      <div class="dash-card">
+        <div class="dash-card__title">Budgets On Track</div>
+        <div class="dash-card__amount">
+          {% with on_track=0 %}{{ budgets|length }}{% endwith %}
+        </div>
+        <div class="dash-card__desc">healthy</div>
+      </div>
+    </div>
+
+    <div class="dashboard-grid">
+      <div class="content-box">
+        <h2>My Budgets</h2>
+        {% for b in budgets %}
+        <div class="transaction-item">
+          <div class="tx-info">
+            <h4>{{ b.category }}</h4>
+            <p>${{ b.spent_amount }} / ${{ b.budget_amount }} — {{ b.get_status }}</p>
+          </div>
+          <div>
+            <a href="{% url 'budget-edit' b.pk %}" style="font-size:.8rem;color:var(--primary);margin-right:8px;">Edit</a>
+            <form method="POST" action="{% url 'budget-delete' b.pk %}" style="display:inline">
+              {% csrf_token %}
+              <button type="submit" style="font-size:.8rem;color:var(--danger);background:none;border:none;">Delete</button>
+            </form>
+          </div>
+        </div>
+        {% empty %}
+        <p style="color:var(--text-muted);text-align:center;padding:20px;">No budgets yet. <a href="{% url 'budget-create' %}">Create one</a></p>
+        {% endfor %}
+      </div>
+
+      <div class="content-box">
+        <h2>Recent Alerts</h2>
+        {% for alert in alerts %}
+        <div class="transaction-item">
+          <div class="tx-info">
+            <h4>{{ alert.budget.category }}</h4>
+            <p>{{ alert.message }}</p>
+          </div>
+        </div>
+        {% empty %}
+        <p style="color:var(--text-muted);text-align:center;padding:20px;">No alerts</p>
+        {% endfor %}
+      </div>
+    </div>
+  </main>
+</body>
+</html>
