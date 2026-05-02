@@ -30,6 +30,13 @@
 
 ---
 
+## 🎨 UI/UX Design
+
+The visual design and user experience of Smart Finance were meticulously crafted in Figma. 
+You can explore the complete design files here: **[Smart Finance Figma Design](https://www.figma.com/make/qOKDYbZLknZzAzZvMvhyHx/Smart-Finance?p=f&t=RmaGffP568j0J5dS-0&fullscreen=1)**
+
+---
+
 ## 🛠️ Technology Stack
 
 | Component | Technology Used |
