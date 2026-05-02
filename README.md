@@ -104,6 +104,7 @@ Navigate to `http://127.0.0.1:8000/` in your browser to access the app!
 ---
 
 <div align="center">
-  <b>Developed by <a href="https://github.com/Mariam-Mohamedali">Mariam Mohamedali</a></b><br>
+  <b>Frontend (HTML, CSS, UI/UX) by <a href="https://github.com/Mariam-Mohamedali">Mariam Mohamedali</a></b><br>
+  <b>Backend (Django) by <a href="https://github.com/Saged00">Saged</a></b><br>
   <i>Empowering your financial future.</i>
 </div>
