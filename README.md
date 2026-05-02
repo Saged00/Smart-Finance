@@ -58,8 +58,8 @@ Follow these steps to get the project running on your local machine:
 
 **1. Clone the repository:**
 ```bash
-git clone https://github.com/Saged00/Budget-App.git
-cd Budget-App
+git clone https://github.com/Mariam-Mohamedali/Smart-Finance.git
+cd Smart-Finance
 ```
 
 **2. Create and activate a virtual environment:**
@@ -104,6 +104,6 @@ Navigate to `http://127.0.0.1:8000/` in your browser to access the app!
 ---
 
 <div align="center">
-  <b>Developed by <a href="https://github.com/Saged00">Saged</a></b><br>
+  <b>Developed by <a href="https://github.com/Mariam-Mohamedali">Mariam Mohamedali</a></b><br>
   <i>Empowering your financial future.</i>
 </div>
