@@ -7,6 +7,11 @@ from budgets.models import Budget
 
 @login_required
 def goals_view(request):
+    """
+    Manages the user's financial goals page.
+    Displays all existing savings goals and handles the creation of new goals 
+    through a secure POST request.
+    """
     goals = SavingsGoal.objects.filter(user=request.user)
     form  = SavingsGoalForm(request.POST or None)
 
@@ -25,6 +30,11 @@ def goals_view(request):
 
 @login_required
 def goal_delete_view(request, pk):
+    """
+    Safely removes a specific savings goal from the user's profile.
+    Args:
+        pk (int): The primary key of the goal to be deleted.
+    """
     goal = get_object_or_404(SavingsGoal, pk=pk, user=request.user)
     if request.method == 'POST':
         goal.delete()
@@ -33,9 +43,14 @@ def goal_delete_view(request, pk):
 
 @login_required
 def reports_view(request):
+    """
+    Generates a comprehensive financial report for the user.
+    Aggregates budget data to provide metrics for data visualization (charts), 
+    including total spending versus allocated limits across all categories.
+    """
     budgets = Budget.objects.filter(user=request.user)
 
-    # بيانات للـ charts
+    # Data preparation for frontend charts
     categories = [b.category        for b in budgets]
     spent      = [float(b.spent_amount)  for b in budgets]
     limits     = [float(b.budget_amount) for b in budgets]
