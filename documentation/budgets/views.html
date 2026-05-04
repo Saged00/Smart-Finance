@@ -78,8 +78,8 @@
 </span><span id="L-7"><a href="#L-7"><span class="linenos"> 7</span></a><span class="nd">@login_required</span>
 </span><span id="L-8"><a href="#L-8"><span class="linenos"> 8</span></a><span class="k">def</span><span class="w"> </span><span class="nf">dashboard_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
 </span><span id="L-9"><a href="#L-9"><span class="linenos"> 9</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-10"><a href="#L-10"><span class="linenos">10</span></a><span class="sd">    عرض لوحة التحكم الرئيسية (Dashboard).</span>
-</span><span id="L-11"><a href="#L-11"><span class="linenos">11</span></a><span class="sd">    يتم استرجاع ميزانيات المستخدم الحالي وآخر 5 تنبيهات تم إنشاؤها.</span>
+</span><span id="L-10"><a href="#L-10"><span class="linenos">10</span></a><span class="sd">    Renders the main dashboard for the user.</span>
+</span><span id="L-11"><a href="#L-11"><span class="linenos">11</span></a><span class="sd">    Retrieves the user&#39;s budgets and the most recent 5 financial alerts.</span>
 </span><span id="L-12"><a href="#L-12"><span class="linenos">12</span></a><span class="sd">    &quot;&quot;&quot;</span>
 </span><span id="L-13"><a href="#L-13"><span class="linenos">13</span></a>    <span class="n">budgets</span> <span class="o">=</span> <span class="n">Budget</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
 </span><span id="L-14"><a href="#L-14"><span class="linenos">14</span></a>    <span class="n">alerts</span>  <span class="o">=</span> <span class="n">BudgetAlert</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">budget__user</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s1">&#39;-triggered_at&#39;</span><span class="p">)[:</span><span class="mi">5</span><span class="p">]</span>
@@ -93,7 +93,7 @@
 </span><span id="L-22"><a href="#L-22"><span class="linenos">22</span></a><span class="nd">@login_required</span>
 </span><span id="L-23"><a href="#L-23"><span class="linenos">23</span></a><span class="k">def</span><span class="w"> </span><span class="nf">budget_list_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
 </span><span id="L-24"><a href="#L-24"><span class="linenos">24</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-25"><a href="#L-25"><span class="linenos">25</span></a><span class="sd">    عرض قائمة شاملة بجميع ميزانيات المستخدم الحالي.</span>
+</span><span id="L-25"><a href="#L-25"><span class="linenos">25</span></a><span class="sd">    Displays a comprehensive list of all budget categories managed by the current user.</span>
 </span><span id="L-26"><a href="#L-26"><span class="linenos">26</span></a><span class="sd">    &quot;&quot;&quot;</span>
 </span><span id="L-27"><a href="#L-27"><span class="linenos">27</span></a>    <span class="n">budgets</span> <span class="o">=</span> <span class="n">Budget</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
 </span><span id="L-28"><a href="#L-28"><span class="linenos">28</span></a>    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;budgets/budget_list.html&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;budgets&#39;</span><span class="p">:</span> <span class="n">budgets</span><span class="p">})</span>
@@ -102,8 +102,8 @@
 </span><span id="L-31"><a href="#L-31"><span class="linenos">31</span></a><span class="nd">@login_required</span>
 </span><span id="L-32"><a href="#L-32"><span class="linenos">32</span></a><span class="k">def</span><span class="w"> </span><span class="nf">budget_create_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
 </span><span id="L-33"><a href="#L-33"><span class="linenos">33</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-34"><a href="#L-34"><span class="linenos">34</span></a><span class="sd">    إنشاء ميزانية جديدة.</span>
-</span><span id="L-35"><a href="#L-35"><span class="linenos">35</span></a><span class="sd">    يتم التحقق من صحة البيانات المسجلة، ربطها بالمستخدم، وتحديد حالتها (Status).</span>
+</span><span id="L-34"><a href="#L-34"><span class="linenos">34</span></a><span class="sd">    Handles the creation of a new budget category.</span>
+</span><span id="L-35"><a href="#L-35"><span class="linenos">35</span></a><span class="sd">    Validates user input, assigns ownership, and determines initial budget status.</span>
 </span><span id="L-36"><a href="#L-36"><span class="linenos">36</span></a><span class="sd">    &quot;&quot;&quot;</span>
 </span><span id="L-37"><a href="#L-37"><span class="linenos">37</span></a>    <span class="n">form</span> <span class="o">=</span> <span class="n">BudgetForm</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span> <span class="ow">or</span> <span class="kc">None</span><span class="p">)</span>
 </span><span id="L-38"><a href="#L-38"><span class="linenos">38</span></a>    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;POST&#39;</span> <span class="ow">and</span> <span class="n">form</span><span class="o">.</span><span class="n">is_valid</span><span class="p">():</span>
@@ -118,9 +118,9 @@
 </span><span id="L-47"><a href="#L-47"><span class="linenos">47</span></a><span class="nd">@login_required</span>
 </span><span id="L-48"><a href="#L-48"><span class="linenos">48</span></a><span class="k">def</span><span class="w"> </span><span class="nf">budget_edit_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">pk</span><span class="p">):</span>
 </span><span id="L-49"><a href="#L-49"><span class="linenos">49</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-50"><a href="#L-50"><span class="linenos">50</span></a><span class="sd">    تعديل ميزانية موجودة مسبقاً.</span>
+</span><span id="L-50"><a href="#L-50"><span class="linenos">50</span></a><span class="sd">    Allows the user to modify an existing budget record.</span>
 </span><span id="L-51"><a href="#L-51"><span class="linenos">51</span></a><span class="sd">    Args:</span>
-</span><span id="L-52"><a href="#L-52"><span class="linenos">52</span></a><span class="sd">        pk: الرقم التعريفي للميزانية المراد تعديلها.</span>
+</span><span id="L-52"><a href="#L-52"><span class="linenos">52</span></a><span class="sd">        pk (int): The primary key of the budget entry to update.</span>
 </span><span id="L-53"><a href="#L-53"><span class="linenos">53</span></a><span class="sd">    &quot;&quot;&quot;</span>
 </span><span id="L-54"><a href="#L-54"><span class="linenos">54</span></a>    <span class="n">budget</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="n">Budget</span><span class="p">,</span> <span class="n">pk</span><span class="o">=</span><span class="n">pk</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
 </span><span id="L-55"><a href="#L-55"><span class="linenos">55</span></a>    <span class="n">form</span>   <span class="o">=</span> <span class="n">BudgetForm</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span> <span class="ow">or</span> <span class="kc">None</span><span class="p">,</span> <span class="n">instance</span><span class="o">=</span><span class="n">budget</span><span class="p">)</span>
@@ -135,9 +135,9 @@
 </span><span id="L-64"><a href="#L-64"><span class="linenos">64</span></a><span class="nd">@login_required</span>
 </span><span id="L-65"><a href="#L-65"><span class="linenos">65</span></a><span class="k">def</span><span class="w"> </span><span class="nf">budget_delete_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">pk</span><span class="p">):</span>
 </span><span id="L-66"><a href="#L-66"><span class="linenos">66</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-67"><a href="#L-67"><span class="linenos">67</span></a><span class="sd">    حذف ميزانية محددة من النظام.</span>
+</span><span id="L-67"><a href="#L-67"><span class="linenos">67</span></a><span class="sd">    Deletes a specific budget record from the system.</span>
 </span><span id="L-68"><a href="#L-68"><span class="linenos">68</span></a><span class="sd">    Args:</span>
-</span><span id="L-69"><a href="#L-69"><span class="linenos">69</span></a><span class="sd">        pk: الرقم التعريفي للميزانية.</span>
+</span><span id="L-69"><a href="#L-69"><span class="linenos">69</span></a><span class="sd">        pk (int): The primary key of the budget to be deleted.</span>
 </span><span id="L-70"><a href="#L-70"><span class="linenos">70</span></a><span class="sd">    &quot;&quot;&quot;</span>
 </span><span id="L-71"><a href="#L-71"><span class="linenos">71</span></a>    <span class="n">budget</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="n">Budget</span><span class="p">,</span> <span class="n">pk</span><span class="o">=</span><span class="n">pk</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
 </span><span id="L-72"><a href="#L-72"><span class="linenos">72</span></a>    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;POST&#39;</span><span class="p">:</span>
@@ -148,8 +148,8 @@
 </span><span id="L-77"><a href="#L-77"><span class="linenos">77</span></a><span class="nd">@login_required</span>
 </span><span id="L-78"><a href="#L-78"><span class="linenos">78</span></a><span class="k">def</span><span class="w"> </span><span class="nf">budget_alerts_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
 </span><span id="L-79"><a href="#L-79"><span class="linenos">79</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-80"><a href="#L-80"><span class="linenos">80</span></a><span class="sd">    عرض صفحة التنبيهات مع ملخص مالي.</span>
-</span><span id="L-81"><a href="#L-81"><span class="linenos">81</span></a><span class="sd">    يتم حساب إجمالي الميزانيات وإجمالي المصروفات لعرضها في صفحة التنبيهات.</span>
+</span><span id="L-80"><a href="#L-80"><span class="linenos">80</span></a><span class="sd">    Provides a detailed view of budget notifications and financial summaries.</span>
+</span><span id="L-81"><a href="#L-81"><span class="linenos">81</span></a><span class="sd">    Calculates total budget versus total spending for reporting purposes.</span>
 </span><span id="L-82"><a href="#L-82"><span class="linenos">82</span></a><span class="sd">    &quot;&quot;&quot;</span>
 </span><span id="L-83"><a href="#L-83"><span class="linenos">83</span></a>    <span class="n">alerts</span>  <span class="o">=</span> <span class="n">BudgetAlert</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">budget__user</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s1">&#39;-triggered_at&#39;</span><span class="p">)</span>
 </span><span id="L-84"><a href="#L-84"><span class="linenos">84</span></a>    <span class="n">budgets</span> <span class="o">=</span> <span class="n">Budget</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
@@ -180,8 +180,8 @@
             <div class="pdoc-code codehilite"><pre><span></span><span id="dashboard_view-8"><a href="#dashboard_view-8"><span class="linenos"> 8</span></a><span class="nd">@login_required</span>
 </span><span id="dashboard_view-9"><a href="#dashboard_view-9"><span class="linenos"> 9</span></a><span class="k">def</span><span class="w"> </span><span class="nf">dashboard_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
 </span><span id="dashboard_view-10"><a href="#dashboard_view-10"><span class="linenos">10</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="dashboard_view-11"><a href="#dashboard_view-11"><span class="linenos">11</span></a><span class="sd">    عرض لوحة التحكم الرئيسية (Dashboard).</span>
-</span><span id="dashboard_view-12"><a href="#dashboard_view-12"><span class="linenos">12</span></a><span class="sd">    يتم استرجاع ميزانيات المستخدم الحالي وآخر 5 تنبيهات تم إنشاؤها.</span>
+</span><span id="dashboard_view-11"><a href="#dashboard_view-11"><span class="linenos">11</span></a><span class="sd">    Renders the main dashboard for the user.</span>
+</span><span id="dashboard_view-12"><a href="#dashboard_view-12"><span class="linenos">12</span></a><span class="sd">    Retrieves the user&#39;s budgets and the most recent 5 financial alerts.</span>
 </span><span id="dashboard_view-13"><a href="#dashboard_view-13"><span class="linenos">13</span></a><span class="sd">    &quot;&quot;&quot;</span>
 </span><span id="dashboard_view-14"><a href="#dashboard_view-14"><span class="linenos">14</span></a>    <span class="n">budgets</span> <span class="o">=</span> <span class="n">Budget</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
 </span><span id="dashboard_view-15"><a href="#dashboard_view-15"><span class="linenos">15</span></a>    <span class="n">alerts</span>  <span class="o">=</span> <span class="n">BudgetAlert</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">budget__user</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s1">&#39;-triggered_at&#39;</span><span class="p">)[:</span><span class="mi">5</span><span class="p">]</span>
@@ -193,8 +193,8 @@
 </span></pre></div>
 
 
-            <div class="docstring"><p>عرض لوحة التحكم الرئيسية (Dashboard).
-يتم استرجاع ميزانيات المستخدم الحالي وآخر 5 تنبيهات تم إنشاؤها.</p>
+            <div class="docstring"><p>Renders the main dashboard for the user.
+Retrieves the user's budgets and the most recent 5 financial alerts.</p>
 </div>
 
 
@@ -214,14 +214,14 @@
             <div class="pdoc-code codehilite"><pre><span></span><span id="budget_list_view-23"><a href="#budget_list_view-23"><span class="linenos">23</span></a><span class="nd">@login_required</span>
 </span><span id="budget_list_view-24"><a href="#budget_list_view-24"><span class="linenos">24</span></a><span class="k">def</span><span class="w"> </span><span class="nf">budget_list_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
 </span><span id="budget_list_view-25"><a href="#budget_list_view-25"><span class="linenos">25</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="budget_list_view-26"><a href="#budget_list_view-26"><span class="linenos">26</span></a><span class="sd">    عرض قائمة شاملة بجميع ميزانيات المستخدم الحالي.</span>
+</span><span id="budget_list_view-26"><a href="#budget_list_view-26"><span class="linenos">26</span></a><span class="sd">    Displays a comprehensive list of all budget categories managed by the current user.</span>
 </span><span id="budget_list_view-27"><a href="#budget_list_view-27"><span class="linenos">27</span></a><span class="sd">    &quot;&quot;&quot;</span>
 </span><span id="budget_list_view-28"><a href="#budget_list_view-28"><span class="linenos">28</span></a>    <span class="n">budgets</span> <span class="o">=</span> <span class="n">Budget</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
 </span><span id="budget_list_view-29"><a href="#budget_list_view-29"><span class="linenos">29</span></a>    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;budgets/budget_list.html&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;budgets&#39;</span><span class="p">:</span> <span class="n">budgets</span><span class="p">})</span>
 </span></pre></div>
 
 
-            <div class="docstring"><p>عرض قائمة شاملة بجميع ميزانيات المستخدم الحالي.</p>
+            <div class="docstring"><p>Displays a comprehensive list of all budget categories managed by the current user.</p>
 </div>
 
 
@@ -241,8 +241,8 @@
             <div class="pdoc-code codehilite"><pre><span></span><span id="budget_create_view-32"><a href="#budget_create_view-32"><span class="linenos">32</span></a><span class="nd">@login_required</span>
 </span><span id="budget_create_view-33"><a href="#budget_create_view-33"><span class="linenos">33</span></a><span class="k">def</span><span class="w"> </span><span class="nf">budget_create_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
 </span><span id="budget_create_view-34"><a href="#budget_create_view-34"><span class="linenos">34</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="budget_create_view-35"><a href="#budget_create_view-35"><span class="linenos">35</span></a><span class="sd">    إنشاء ميزانية جديدة.</span>
-</span><span id="budget_create_view-36"><a href="#budget_create_view-36"><span class="linenos">36</span></a><span class="sd">    يتم التحقق من صحة البيانات المسجلة، ربطها بالمستخدم، وتحديد حالتها (Status).</span>
+</span><span id="budget_create_view-35"><a href="#budget_create_view-35"><span class="linenos">35</span></a><span class="sd">    Handles the creation of a new budget category.</span>
+</span><span id="budget_create_view-36"><a href="#budget_create_view-36"><span class="linenos">36</span></a><span class="sd">    Validates user input, assigns ownership, and determines initial budget status.</span>
 </span><span id="budget_create_view-37"><a href="#budget_create_view-37"><span class="linenos">37</span></a><span class="sd">    &quot;&quot;&quot;</span>
 </span><span id="budget_create_view-38"><a href="#budget_create_view-38"><span class="linenos">38</span></a>    <span class="n">form</span> <span class="o">=</span> <span class="n">BudgetForm</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span> <span class="ow">or</span> <span class="kc">None</span><span class="p">)</span>
 </span><span id="budget_create_view-39"><a href="#budget_create_view-39"><span class="linenos">39</span></a>    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;POST&#39;</span> <span class="ow">and</span> <span class="n">form</span><span class="o">.</span><span class="n">is_valid</span><span class="p">():</span>
@@ -255,8 +255,8 @@
 </span></pre></div>
 
 
-            <div class="docstring"><p>إنشاء ميزانية جديدة.
-يتم التحقق من صحة البيانات المسجلة، ربطها بالمستخدم، وتحديد حالتها (Status).</p>
+            <div class="docstring"><p>Handles the creation of a new budget category.
+Validates user input, assigns ownership, and determines initial budget status.</p>
 </div>
 
 
@@ -276,9 +276,9 @@
             <div class="pdoc-code codehilite"><pre><span></span><span id="budget_edit_view-48"><a href="#budget_edit_view-48"><span class="linenos">48</span></a><span class="nd">@login_required</span>
 </span><span id="budget_edit_view-49"><a href="#budget_edit_view-49"><span class="linenos">49</span></a><span class="k">def</span><span class="w"> </span><span class="nf">budget_edit_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">pk</span><span class="p">):</span>
 </span><span id="budget_edit_view-50"><a href="#budget_edit_view-50"><span class="linenos">50</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="budget_edit_view-51"><a href="#budget_edit_view-51"><span class="linenos">51</span></a><span class="sd">    تعديل ميزانية موجودة مسبقاً.</span>
+</span><span id="budget_edit_view-51"><a href="#budget_edit_view-51"><span class="linenos">51</span></a><span class="sd">    Allows the user to modify an existing budget record.</span>
 </span><span id="budget_edit_view-52"><a href="#budget_edit_view-52"><span class="linenos">52</span></a><span class="sd">    Args:</span>
-</span><span id="budget_edit_view-53"><a href="#budget_edit_view-53"><span class="linenos">53</span></a><span class="sd">        pk: الرقم التعريفي للميزانية المراد تعديلها.</span>
+</span><span id="budget_edit_view-53"><a href="#budget_edit_view-53"><span class="linenos">53</span></a><span class="sd">        pk (int): The primary key of the budget entry to update.</span>
 </span><span id="budget_edit_view-54"><a href="#budget_edit_view-54"><span class="linenos">54</span></a><span class="sd">    &quot;&quot;&quot;</span>
 </span><span id="budget_edit_view-55"><a href="#budget_edit_view-55"><span class="linenos">55</span></a>    <span class="n">budget</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="n">Budget</span><span class="p">,</span> <span class="n">pk</span><span class="o">=</span><span class="n">pk</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
 </span><span id="budget_edit_view-56"><a href="#budget_edit_view-56"><span class="linenos">56</span></a>    <span class="n">form</span>   <span class="o">=</span> <span class="n">BudgetForm</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span> <span class="ow">or</span> <span class="kc">None</span><span class="p">,</span> <span class="n">instance</span><span class="o">=</span><span class="n">budget</span><span class="p">)</span>
@@ -291,9 +291,9 @@
 </span></pre></div>
 
 
-            <div class="docstring"><p>تعديل ميزانية موجودة مسبقاً.
+            <div class="docstring"><p>Allows the user to modify an existing budget record.
 Args:
-    pk: الرقم التعريفي للميزانية المراد تعديلها.</p>
+    pk (int): The primary key of the budget entry to update.</p>
 </div>
 
 
@@ -313,9 +313,9 @@ Args:
             <div class="pdoc-code codehilite"><pre><span></span><span id="budget_delete_view-65"><a href="#budget_delete_view-65"><span class="linenos">65</span></a><span class="nd">@login_required</span>
 </span><span id="budget_delete_view-66"><a href="#budget_delete_view-66"><span class="linenos">66</span></a><span class="k">def</span><span class="w"> </span><span class="nf">budget_delete_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">pk</span><span class="p">):</span>
 </span><span id="budget_delete_view-67"><a href="#budget_delete_view-67"><span class="linenos">67</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="budget_delete_view-68"><a href="#budget_delete_view-68"><span class="linenos">68</span></a><span class="sd">    حذف ميزانية محددة من النظام.</span>
+</span><span id="budget_delete_view-68"><a href="#budget_delete_view-68"><span class="linenos">68</span></a><span class="sd">    Deletes a specific budget record from the system.</span>
 </span><span id="budget_delete_view-69"><a href="#budget_delete_view-69"><span class="linenos">69</span></a><span class="sd">    Args:</span>
-</span><span id="budget_delete_view-70"><a href="#budget_delete_view-70"><span class="linenos">70</span></a><span class="sd">        pk: الرقم التعريفي للميزانية.</span>
+</span><span id="budget_delete_view-70"><a href="#budget_delete_view-70"><span class="linenos">70</span></a><span class="sd">        pk (int): The primary key of the budget to be deleted.</span>
 </span><span id="budget_delete_view-71"><a href="#budget_delete_view-71"><span class="linenos">71</span></a><span class="sd">    &quot;&quot;&quot;</span>
 </span><span id="budget_delete_view-72"><a href="#budget_delete_view-72"><span class="linenos">72</span></a>    <span class="n">budget</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="n">Budget</span><span class="p">,</span> <span class="n">pk</span><span class="o">=</span><span class="n">pk</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
 </span><span id="budget_delete_view-73"><a href="#budget_delete_view-73"><span class="linenos">73</span></a>    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;POST&#39;</span><span class="p">:</span>
@@ -324,9 +324,9 @@ Args:
 </span></pre></div>
 
 
-            <div class="docstring"><p>حذف ميزانية محددة من النظام.
+            <div class="docstring"><p>Deletes a specific budget record from the system.
 Args:
-    pk: الرقم التعريفي للميزانية.</p>
+    pk (int): The primary key of the budget to be deleted.</p>
 </div>
 
 
@@ -346,8 +346,8 @@ Args:
             <div class="pdoc-code codehilite"><pre><span></span><span id="budget_alerts_view-78"><a href="#budget_alerts_view-78"><span class="linenos">78</span></a><span class="nd">@login_required</span>
 </span><span id="budget_alerts_view-79"><a href="#budget_alerts_view-79"><span class="linenos">79</span></a><span class="k">def</span><span class="w"> </span><span class="nf">budget_alerts_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
 </span><span id="budget_alerts_view-80"><a href="#budget_alerts_view-80"><span class="linenos">80</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="budget_alerts_view-81"><a href="#budget_alerts_view-81"><span class="linenos">81</span></a><span class="sd">    عرض صفحة التنبيهات مع ملخص مالي.</span>
-</span><span id="budget_alerts_view-82"><a href="#budget_alerts_view-82"><span class="linenos">82</span></a><span class="sd">    يتم حساب إجمالي الميزانيات وإجمالي المصروفات لعرضها في صفحة التنبيهات.</span>
+</span><span id="budget_alerts_view-81"><a href="#budget_alerts_view-81"><span class="linenos">81</span></a><span class="sd">    Provides a detailed view of budget notifications and financial summaries.</span>
+</span><span id="budget_alerts_view-82"><a href="#budget_alerts_view-82"><span class="linenos">82</span></a><span class="sd">    Calculates total budget versus total spending for reporting purposes.</span>
 </span><span id="budget_alerts_view-83"><a href="#budget_alerts_view-83"><span class="linenos">83</span></a><span class="sd">    &quot;&quot;&quot;</span>
 </span><span id="budget_alerts_view-84"><a href="#budget_alerts_view-84"><span class="linenos">84</span></a>    <span class="n">alerts</span>  <span class="o">=</span> <span class="n">BudgetAlert</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">budget__user</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s1">&#39;-triggered_at&#39;</span><span class="p">)</span>
 </span><span id="budget_alerts_view-85"><a href="#budget_alerts_view-85"><span class="linenos">85</span></a>    <span class="n">budgets</span> <span class="o">=</span> <span class="n">Budget</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
@@ -362,8 +362,8 @@ Args:
 </span></pre></div>
 
 
-            <div class="docstring"><p>عرض صفحة التنبيهات مع ملخص مالي.
-يتم حساب إجمالي الميزانيات وإجمالي المصروفات لعرضها في صفحة التنبيهات.</p>
+            <div class="docstring"><p>Provides a detailed view of budget notifications and financial summaries.
+Calculates total budget versus total spending for reporting purposes.</p>
 </div>
 
 

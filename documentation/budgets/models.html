@@ -206,45 +206,45 @@
 </span><span id="L-3"><a href="#L-3"><span class="linenos"> 3</span></a>
 </span><span id="L-4"><a href="#L-4"><span class="linenos"> 4</span></a><span class="k">class</span><span class="w"> </span><span class="nc">Budget</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
 </span><span id="L-5"><a href="#L-5"><span class="linenos"> 5</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-6"><a href="#L-6"><span class="linenos"> 6</span></a><span class="sd">    Class: Budget Model</span>
-</span><span id="L-7"><a href="#L-7"><span class="linenos"> 7</span></a><span class="sd">    Description: يمثل ميزانية محددة لمستخدم معين في فئة (Category) معينة.</span>
-</span><span id="L-8"><a href="#L-8"><span class="linenos"> 8</span></a><span class="sd">    يتبع هذا الموديل مبدأ التتبع المالي ويحدد حالة الصرف (On Track, Near Limit, Exceeded).</span>
-</span><span id="L-9"><a href="#L-9"><span class="linenos"> 9</span></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="L-10"><a href="#L-10"><span class="linenos">10</span></a>    <span class="n">STATUS_ON_TRACK</span>   <span class="o">=</span> <span class="s1">&#39;on_track&#39;</span>
-</span><span id="L-11"><a href="#L-11"><span class="linenos">11</span></a>    <span class="n">STATUS_NEAR_LIMIT</span> <span class="o">=</span> <span class="s1">&#39;near_limit&#39;</span>
-</span><span id="L-12"><a href="#L-12"><span class="linenos">12</span></a>    <span class="n">STATUS_EXCEEDED</span>   <span class="o">=</span> <span class="s1">&#39;exceeded&#39;</span>
-</span><span id="L-13"><a href="#L-13"><span class="linenos">13</span></a>    <span class="n">STATUS_CHOICES</span> <span class="o">=</span> <span class="p">[</span>
-</span><span id="L-14"><a href="#L-14"><span class="linenos">14</span></a>        <span class="p">(</span><span class="n">STATUS_ON_TRACK</span><span class="p">,</span>   <span class="s1">&#39;On Track&#39;</span><span class="p">),</span>
-</span><span id="L-15"><a href="#L-15"><span class="linenos">15</span></a>        <span class="p">(</span><span class="n">STATUS_NEAR_LIMIT</span><span class="p">,</span> <span class="s1">&#39;Near Limit&#39;</span><span class="p">),</span>
-</span><span id="L-16"><a href="#L-16"><span class="linenos">16</span></a>        <span class="p">(</span><span class="n">STATUS_EXCEEDED</span><span class="p">,</span>   <span class="s1">&#39;Exceeded&#39;</span><span class="p">),</span>
-</span><span id="L-17"><a href="#L-17"><span class="linenos">17</span></a>    <span class="p">]</span>
-</span><span id="L-18"><a href="#L-18"><span class="linenos">18</span></a>
-</span><span id="L-19"><a href="#L-19"><span class="linenos">19</span></a>    <span class="n">user</span>            <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">AUTH_USER_MODEL</span><span class="p">,</span> <span class="n">on_delete</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">CASCADE</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;budgets&#39;</span><span class="p">)</span>
-</span><span id="L-20"><a href="#L-20"><span class="linenos">20</span></a>    <span class="n">category</span>        <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
-</span><span id="L-21"><a href="#L-21"><span class="linenos">21</span></a>    <span class="n">budget_amount</span>   <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DecimalField</span><span class="p">(</span><span class="n">max_digits</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">decimal_places</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-</span><span id="L-22"><a href="#L-22"><span class="linenos">22</span></a>    <span class="n">spent_amount</span>    <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DecimalField</span><span class="p">(</span><span class="n">max_digits</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">decimal_places</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-</span><span id="L-23"><a href="#L-23"><span class="linenos">23</span></a>    <span class="n">start_date</span>      <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DateField</span><span class="p">()</span>
-</span><span id="L-24"><a href="#L-24"><span class="linenos">24</span></a>    <span class="n">end_date</span>        <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DateField</span><span class="p">()</span>
-</span><span id="L-25"><a href="#L-25"><span class="linenos">25</span></a>    <span class="n">alert_threshold</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">80</span><span class="p">)</span>
-</span><span id="L-26"><a href="#L-26"><span class="linenos">26</span></a>    <span class="n">status</span>          <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="n">STATUS_CHOICES</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">STATUS_ON_TRACK</span><span class="p">)</span>
-</span><span id="L-27"><a href="#L-27"><span class="linenos">27</span></a>
-</span><span id="L-28"><a href="#L-28"><span class="linenos">28</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_percentage_used</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="L-29"><a href="#L-29"><span class="linenos">29</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-30"><a href="#L-30"><span class="linenos">30</span></a><span class="sd">        يحسب النسبة المئوية لما تم صرفه من الميزانية الكلية.</span>
-</span><span id="L-31"><a href="#L-31"><span class="linenos">31</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="L-32"><a href="#L-32"><span class="linenos">32</span></a>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">budget_amount</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-</span><span id="L-33"><a href="#L-33"><span class="linenos">33</span></a>            <span class="k">return</span> <span class="mi">0</span>
-</span><span id="L-34"><a href="#L-34"><span class="linenos">34</span></a>        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">spent_amount</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">budget_amount</span> <span class="o">*</span> <span class="mi">100</span><span class="p">)</span>
-</span><span id="L-35"><a href="#L-35"><span class="linenos">35</span></a>
-</span><span id="L-36"><a href="#L-36"><span class="linenos">36</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_remaining</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="L-37"><a href="#L-37"><span class="linenos">37</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-38"><a href="#L-38"><span class="linenos">38</span></a><span class="sd">        يسترجع المبلغ المتبقي في الميزانية (الفرق بين المحدد والمصروف).</span>
-</span><span id="L-39"><a href="#L-39"><span class="linenos">39</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="L-40"><a href="#L-40"><span class="linenos">40</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">budget_amount</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">spent_amount</span>
-</span><span id="L-41"><a href="#L-41"><span class="linenos">41</span></a>
-</span><span id="L-42"><a href="#L-42"><span class="linenos">42</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_status</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="L-43"><a href="#L-43"><span class="linenos">43</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-44"><a href="#L-44"><span class="linenos">44</span></a><span class="sd">        يحدد حالة الميزانية الحالية بناءً على نسبة الصرف مقارنة بـ alert_threshold.</span>
+</span><span id="L-6"><a href="#L-6"><span class="linenos"> 6</span></a><span class="sd">    Model representing a user&#39;s budget for a specific category.</span>
+</span><span id="L-7"><a href="#L-7"><span class="linenos"> 7</span></a><span class="sd">    Includes logic for tracking spending progress and determining financial status.</span>
+</span><span id="L-8"><a href="#L-8"><span class="linenos"> 8</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="L-9"><a href="#L-9"><span class="linenos"> 9</span></a>    <span class="n">STATUS_ON_TRACK</span>   <span class="o">=</span> <span class="s1">&#39;on_track&#39;</span>
+</span><span id="L-10"><a href="#L-10"><span class="linenos">10</span></a>    <span class="n">STATUS_NEAR_LIMIT</span> <span class="o">=</span> <span class="s1">&#39;near_limit&#39;</span>
+</span><span id="L-11"><a href="#L-11"><span class="linenos">11</span></a>    <span class="n">STATUS_EXCEEDED</span>   <span class="o">=</span> <span class="s1">&#39;exceeded&#39;</span>
+</span><span id="L-12"><a href="#L-12"><span class="linenos">12</span></a>    <span class="n">STATUS_CHOICES</span> <span class="o">=</span> <span class="p">[</span>
+</span><span id="L-13"><a href="#L-13"><span class="linenos">13</span></a>        <span class="p">(</span><span class="n">STATUS_ON_TRACK</span><span class="p">,</span>   <span class="s1">&#39;On Track&#39;</span><span class="p">),</span>
+</span><span id="L-14"><a href="#L-14"><span class="linenos">14</span></a>        <span class="p">(</span><span class="n">STATUS_NEAR_LIMIT</span><span class="p">,</span> <span class="s1">&#39;Near Limit&#39;</span><span class="p">),</span>
+</span><span id="L-15"><a href="#L-15"><span class="linenos">15</span></a>        <span class="p">(</span><span class="n">STATUS_EXCEEDED</span><span class="p">,</span>   <span class="s1">&#39;Exceeded&#39;</span><span class="p">),</span>
+</span><span id="L-16"><a href="#L-16"><span class="linenos">16</span></a>    <span class="p">]</span>
+</span><span id="L-17"><a href="#L-17"><span class="linenos">17</span></a>
+</span><span id="L-18"><a href="#L-18"><span class="linenos">18</span></a>    <span class="n">user</span>            <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">AUTH_USER_MODEL</span><span class="p">,</span> <span class="n">on_delete</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">CASCADE</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;budgets&#39;</span><span class="p">)</span>
+</span><span id="L-19"><a href="#L-19"><span class="linenos">19</span></a>    <span class="n">category</span>        <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+</span><span id="L-20"><a href="#L-20"><span class="linenos">20</span></a>    <span class="n">budget_amount</span>   <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DecimalField</span><span class="p">(</span><span class="n">max_digits</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">decimal_places</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+</span><span id="L-21"><a href="#L-21"><span class="linenos">21</span></a>    <span class="n">spent_amount</span>    <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DecimalField</span><span class="p">(</span><span class="n">max_digits</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">decimal_places</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</span><span id="L-22"><a href="#L-22"><span class="linenos">22</span></a>    <span class="n">start_date</span>      <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DateField</span><span class="p">()</span>
+</span><span id="L-23"><a href="#L-23"><span class="linenos">23</span></a>    <span class="n">end_date</span>        <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DateField</span><span class="p">()</span>
+</span><span id="L-24"><a href="#L-24"><span class="linenos">24</span></a>    <span class="n">alert_threshold</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">80</span><span class="p">)</span>
+</span><span id="L-25"><a href="#L-25"><span class="linenos">25</span></a>    <span class="n">status</span>          <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="n">STATUS_CHOICES</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">STATUS_ON_TRACK</span><span class="p">)</span>
+</span><span id="L-26"><a href="#L-26"><span class="linenos">26</span></a>
+</span><span id="L-27"><a href="#L-27"><span class="linenos">27</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_percentage_used</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="L-28"><a href="#L-28"><span class="linenos">28</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-29"><a href="#L-29"><span class="linenos">29</span></a><span class="sd">        Calculates the percentage of the budget that has been spent.</span>
+</span><span id="L-30"><a href="#L-30"><span class="linenos">30</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="L-31"><a href="#L-31"><span class="linenos">31</span></a>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">budget_amount</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+</span><span id="L-32"><a href="#L-32"><span class="linenos">32</span></a>            <span class="k">return</span> <span class="mi">0</span>
+</span><span id="L-33"><a href="#L-33"><span class="linenos">33</span></a>        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">spent_amount</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">budget_amount</span> <span class="o">*</span> <span class="mi">100</span><span class="p">)</span>
+</span><span id="L-34"><a href="#L-34"><span class="linenos">34</span></a>
+</span><span id="L-35"><a href="#L-35"><span class="linenos">35</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_remaining</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="L-36"><a href="#L-36"><span class="linenos">36</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-37"><a href="#L-37"><span class="linenos">37</span></a><span class="sd">        Returns the remaining balance in the budget.</span>
+</span><span id="L-38"><a href="#L-38"><span class="linenos">38</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="L-39"><a href="#L-39"><span class="linenos">39</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">budget_amount</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">spent_amount</span>
+</span><span id="L-40"><a href="#L-40"><span class="linenos">40</span></a>
+</span><span id="L-41"><a href="#L-41"><span class="linenos">41</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_status</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="L-42"><a href="#L-42"><span class="linenos">42</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-43"><a href="#L-43"><span class="linenos">43</span></a><span class="sd">        Determines the budget status based on the spending percentage relative </span>
+</span><span id="L-44"><a href="#L-44"><span class="linenos">44</span></a><span class="sd">        to the alert threshold.</span>
 </span><span id="L-45"><a href="#L-45"><span class="linenos">45</span></a><span class="sd">        &quot;&quot;&quot;</span>
 </span><span id="L-46"><a href="#L-46"><span class="linenos">46</span></a>        <span class="n">pct</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_percentage_used</span><span class="p">()</span>
 </span><span id="L-47"><a href="#L-47"><span class="linenos">47</span></a>        <span class="k">if</span> <span class="n">pct</span> <span class="o">&gt;=</span> <span class="mi">100</span><span class="p">:</span>
@@ -255,8 +255,8 @@
 </span><span id="L-52"><a href="#L-52"><span class="linenos">52</span></a>
 </span><span id="L-53"><a href="#L-53"><span class="linenos">53</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">update_spent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">amount</span><span class="p">):</span>
 </span><span id="L-54"><a href="#L-54"><span class="linenos">54</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-55"><a href="#L-55"><span class="linenos">55</span></a><span class="sd">        تحديث المبلغ المصروف، إعادة تقييم الحالة، وتشغيل تنبيهات الميزانية.</span>
-</span><span id="L-56"><a href="#L-56"><span class="linenos">56</span></a><span class="sd">        Traceability: هذا التابع يربط بين Budget و BudgetAlert.</span>
+</span><span id="L-55"><a href="#L-55"><span class="linenos">55</span></a><span class="sd">        Updates the spent amount, re-evaluates status, and triggers alerts.</span>
+</span><span id="L-56"><a href="#L-56"><span class="linenos">56</span></a><span class="sd">        Traceability: Links Budget logic to BudgetAlert generation.</span>
 </span><span id="L-57"><a href="#L-57"><span class="linenos">57</span></a><span class="sd">        &quot;&quot;&quot;</span>
 </span><span id="L-58"><a href="#L-58"><span class="linenos">58</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">spent_amount</span> <span class="o">+=</span> <span class="n">amount</span>
 </span><span id="L-59"><a href="#L-59"><span class="linenos">59</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_status</span><span class="p">()</span>
@@ -269,8 +269,8 @@
 </span><span id="L-66"><a href="#L-66"><span class="linenos">66</span></a>
 </span><span id="L-67"><a href="#L-67"><span class="linenos">67</span></a><span class="k">class</span><span class="w"> </span><span class="nc">BudgetAlert</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
 </span><span id="L-68"><a href="#L-68"><span class="linenos">68</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-69"><a href="#L-69"><span class="linenos">69</span></a><span class="sd">    Class: BudgetAlert Model</span>
-</span><span id="L-70"><a href="#L-70"><span class="linenos">70</span></a><span class="sd">    Description: يقوم بتخزين التنبيهات الناتجة عن تخطي الميزانية أو الاقتراب من الحد المسموح.</span>
+</span><span id="L-69"><a href="#L-69"><span class="linenos">69</span></a><span class="sd">    Model for storing notifications triggered when a budget reaches </span>
+</span><span id="L-70"><a href="#L-70"><span class="linenos">70</span></a><span class="sd">    certain thresholds.</span>
 </span><span id="L-71"><a href="#L-71"><span class="linenos">71</span></a><span class="sd">    &quot;&quot;&quot;</span>
 </span><span id="L-72"><a href="#L-72"><span class="linenos">72</span></a>    <span class="n">budget</span>       <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="n">Budget</span><span class="p">,</span> <span class="n">on_delete</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">CASCADE</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;alerts&#39;</span><span class="p">)</span>
 </span><span id="L-73"><a href="#L-73"><span class="linenos">73</span></a>    <span class="n">triggered_at</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DateTimeField</span><span class="p">(</span><span class="n">auto_now_add</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -279,9 +279,9 @@
 </span><span id="L-76"><a href="#L-76"><span class="linenos">76</span></a>    <span class="nd">@classmethod</span>
 </span><span id="L-77"><a href="#L-77"><span class="linenos">77</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">check_and_fire</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">budget</span><span class="p">):</span>
 </span><span id="L-78"><a href="#L-78"><span class="linenos">78</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-79"><a href="#L-79"><span class="linenos">79</span></a><span class="sd">        دالة منطقية تقوم بفحص حالة الميزانية وإنشاء سجل تنبيه جديد إذا لزم الأمر.</span>
+</span><span id="L-79"><a href="#L-79"><span class="linenos">79</span></a><span class="sd">        Analyzes budget status and creates a new alert record if necessary.</span>
 </span><span id="L-80"><a href="#L-80"><span class="linenos">80</span></a><span class="sd">        Args:</span>
-</span><span id="L-81"><a href="#L-81"><span class="linenos">81</span></a><span class="sd">            budget: كائن من نوع Budget المراد فصحه.</span>
+</span><span id="L-81"><a href="#L-81"><span class="linenos">81</span></a><span class="sd">            budget (Budget): The budget instance to evaluate.</span>
 </span><span id="L-82"><a href="#L-82"><span class="linenos">82</span></a><span class="sd">        &quot;&quot;&quot;</span>
 </span><span id="L-83"><a href="#L-83"><span class="linenos">83</span></a>        <span class="n">status</span> <span class="o">=</span> <span class="n">budget</span><span class="o">.</span><span class="n">get_status</span><span class="p">()</span>
 </span><span id="L-84"><a href="#L-84"><span class="linenos">84</span></a>        <span class="k">if</span> <span class="n">status</span> <span class="o">==</span> <span class="n">Budget</span><span class="o">.</span><span class="n">STATUS_NEAR_LIMIT</span><span class="p">:</span>
@@ -311,45 +311,45 @@
     <a class="headerlink" href="#Budget"></a>
             <div class="pdoc-code codehilite"><pre><span></span><span id="Budget-5"><a href="#Budget-5"><span class="linenos"> 5</span></a><span class="k">class</span><span class="w"> </span><span class="nc">Budget</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
 </span><span id="Budget-6"><a href="#Budget-6"><span class="linenos"> 6</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="Budget-7"><a href="#Budget-7"><span class="linenos"> 7</span></a><span class="sd">    Class: Budget Model</span>
-</span><span id="Budget-8"><a href="#Budget-8"><span class="linenos"> 8</span></a><span class="sd">    Description: يمثل ميزانية محددة لمستخدم معين في فئة (Category) معينة.</span>
-</span><span id="Budget-9"><a href="#Budget-9"><span class="linenos"> 9</span></a><span class="sd">    يتبع هذا الموديل مبدأ التتبع المالي ويحدد حالة الصرف (On Track, Near Limit, Exceeded).</span>
-</span><span id="Budget-10"><a href="#Budget-10"><span class="linenos">10</span></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="Budget-11"><a href="#Budget-11"><span class="linenos">11</span></a>    <span class="n">STATUS_ON_TRACK</span>   <span class="o">=</span> <span class="s1">&#39;on_track&#39;</span>
-</span><span id="Budget-12"><a href="#Budget-12"><span class="linenos">12</span></a>    <span class="n">STATUS_NEAR_LIMIT</span> <span class="o">=</span> <span class="s1">&#39;near_limit&#39;</span>
-</span><span id="Budget-13"><a href="#Budget-13"><span class="linenos">13</span></a>    <span class="n">STATUS_EXCEEDED</span>   <span class="o">=</span> <span class="s1">&#39;exceeded&#39;</span>
-</span><span id="Budget-14"><a href="#Budget-14"><span class="linenos">14</span></a>    <span class="n">STATUS_CHOICES</span> <span class="o">=</span> <span class="p">[</span>
-</span><span id="Budget-15"><a href="#Budget-15"><span class="linenos">15</span></a>        <span class="p">(</span><span class="n">STATUS_ON_TRACK</span><span class="p">,</span>   <span class="s1">&#39;On Track&#39;</span><span class="p">),</span>
-</span><span id="Budget-16"><a href="#Budget-16"><span class="linenos">16</span></a>        <span class="p">(</span><span class="n">STATUS_NEAR_LIMIT</span><span class="p">,</span> <span class="s1">&#39;Near Limit&#39;</span><span class="p">),</span>
-</span><span id="Budget-17"><a href="#Budget-17"><span class="linenos">17</span></a>        <span class="p">(</span><span class="n">STATUS_EXCEEDED</span><span class="p">,</span>   <span class="s1">&#39;Exceeded&#39;</span><span class="p">),</span>
-</span><span id="Budget-18"><a href="#Budget-18"><span class="linenos">18</span></a>    <span class="p">]</span>
-</span><span id="Budget-19"><a href="#Budget-19"><span class="linenos">19</span></a>
-</span><span id="Budget-20"><a href="#Budget-20"><span class="linenos">20</span></a>    <span class="n">user</span>            <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">AUTH_USER_MODEL</span><span class="p">,</span> <span class="n">on_delete</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">CASCADE</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;budgets&#39;</span><span class="p">)</span>
-</span><span id="Budget-21"><a href="#Budget-21"><span class="linenos">21</span></a>    <span class="n">category</span>        <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
-</span><span id="Budget-22"><a href="#Budget-22"><span class="linenos">22</span></a>    <span class="n">budget_amount</span>   <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DecimalField</span><span class="p">(</span><span class="n">max_digits</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">decimal_places</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-</span><span id="Budget-23"><a href="#Budget-23"><span class="linenos">23</span></a>    <span class="n">spent_amount</span>    <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DecimalField</span><span class="p">(</span><span class="n">max_digits</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">decimal_places</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-</span><span id="Budget-24"><a href="#Budget-24"><span class="linenos">24</span></a>    <span class="n">start_date</span>      <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DateField</span><span class="p">()</span>
-</span><span id="Budget-25"><a href="#Budget-25"><span class="linenos">25</span></a>    <span class="n">end_date</span>        <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DateField</span><span class="p">()</span>
-</span><span id="Budget-26"><a href="#Budget-26"><span class="linenos">26</span></a>    <span class="n">alert_threshold</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">80</span><span class="p">)</span>
-</span><span id="Budget-27"><a href="#Budget-27"><span class="linenos">27</span></a>    <span class="n">status</span>          <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="n">STATUS_CHOICES</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">STATUS_ON_TRACK</span><span class="p">)</span>
-</span><span id="Budget-28"><a href="#Budget-28"><span class="linenos">28</span></a>
-</span><span id="Budget-29"><a href="#Budget-29"><span class="linenos">29</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_percentage_used</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="Budget-30"><a href="#Budget-30"><span class="linenos">30</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="Budget-31"><a href="#Budget-31"><span class="linenos">31</span></a><span class="sd">        يحسب النسبة المئوية لما تم صرفه من الميزانية الكلية.</span>
-</span><span id="Budget-32"><a href="#Budget-32"><span class="linenos">32</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="Budget-33"><a href="#Budget-33"><span class="linenos">33</span></a>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">budget_amount</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-</span><span id="Budget-34"><a href="#Budget-34"><span class="linenos">34</span></a>            <span class="k">return</span> <span class="mi">0</span>
-</span><span id="Budget-35"><a href="#Budget-35"><span class="linenos">35</span></a>        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">spent_amount</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">budget_amount</span> <span class="o">*</span> <span class="mi">100</span><span class="p">)</span>
-</span><span id="Budget-36"><a href="#Budget-36"><span class="linenos">36</span></a>
-</span><span id="Budget-37"><a href="#Budget-37"><span class="linenos">37</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_remaining</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="Budget-38"><a href="#Budget-38"><span class="linenos">38</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="Budget-39"><a href="#Budget-39"><span class="linenos">39</span></a><span class="sd">        يسترجع المبلغ المتبقي في الميزانية (الفرق بين المحدد والمصروف).</span>
-</span><span id="Budget-40"><a href="#Budget-40"><span class="linenos">40</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="Budget-41"><a href="#Budget-41"><span class="linenos">41</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">budget_amount</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">spent_amount</span>
-</span><span id="Budget-42"><a href="#Budget-42"><span class="linenos">42</span></a>
-</span><span id="Budget-43"><a href="#Budget-43"><span class="linenos">43</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_status</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="Budget-44"><a href="#Budget-44"><span class="linenos">44</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="Budget-45"><a href="#Budget-45"><span class="linenos">45</span></a><span class="sd">        يحدد حالة الميزانية الحالية بناءً على نسبة الصرف مقارنة بـ alert_threshold.</span>
+</span><span id="Budget-7"><a href="#Budget-7"><span class="linenos"> 7</span></a><span class="sd">    Model representing a user&#39;s budget for a specific category.</span>
+</span><span id="Budget-8"><a href="#Budget-8"><span class="linenos"> 8</span></a><span class="sd">    Includes logic for tracking spending progress and determining financial status.</span>
+</span><span id="Budget-9"><a href="#Budget-9"><span class="linenos"> 9</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="Budget-10"><a href="#Budget-10"><span class="linenos">10</span></a>    <span class="n">STATUS_ON_TRACK</span>   <span class="o">=</span> <span class="s1">&#39;on_track&#39;</span>
+</span><span id="Budget-11"><a href="#Budget-11"><span class="linenos">11</span></a>    <span class="n">STATUS_NEAR_LIMIT</span> <span class="o">=</span> <span class="s1">&#39;near_limit&#39;</span>
+</span><span id="Budget-12"><a href="#Budget-12"><span class="linenos">12</span></a>    <span class="n">STATUS_EXCEEDED</span>   <span class="o">=</span> <span class="s1">&#39;exceeded&#39;</span>
+</span><span id="Budget-13"><a href="#Budget-13"><span class="linenos">13</span></a>    <span class="n">STATUS_CHOICES</span> <span class="o">=</span> <span class="p">[</span>
+</span><span id="Budget-14"><a href="#Budget-14"><span class="linenos">14</span></a>        <span class="p">(</span><span class="n">STATUS_ON_TRACK</span><span class="p">,</span>   <span class="s1">&#39;On Track&#39;</span><span class="p">),</span>
+</span><span id="Budget-15"><a href="#Budget-15"><span class="linenos">15</span></a>        <span class="p">(</span><span class="n">STATUS_NEAR_LIMIT</span><span class="p">,</span> <span class="s1">&#39;Near Limit&#39;</span><span class="p">),</span>
+</span><span id="Budget-16"><a href="#Budget-16"><span class="linenos">16</span></a>        <span class="p">(</span><span class="n">STATUS_EXCEEDED</span><span class="p">,</span>   <span class="s1">&#39;Exceeded&#39;</span><span class="p">),</span>
+</span><span id="Budget-17"><a href="#Budget-17"><span class="linenos">17</span></a>    <span class="p">]</span>
+</span><span id="Budget-18"><a href="#Budget-18"><span class="linenos">18</span></a>
+</span><span id="Budget-19"><a href="#Budget-19"><span class="linenos">19</span></a>    <span class="n">user</span>            <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">AUTH_USER_MODEL</span><span class="p">,</span> <span class="n">on_delete</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">CASCADE</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;budgets&#39;</span><span class="p">)</span>
+</span><span id="Budget-20"><a href="#Budget-20"><span class="linenos">20</span></a>    <span class="n">category</span>        <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+</span><span id="Budget-21"><a href="#Budget-21"><span class="linenos">21</span></a>    <span class="n">budget_amount</span>   <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DecimalField</span><span class="p">(</span><span class="n">max_digits</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">decimal_places</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+</span><span id="Budget-22"><a href="#Budget-22"><span class="linenos">22</span></a>    <span class="n">spent_amount</span>    <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DecimalField</span><span class="p">(</span><span class="n">max_digits</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">decimal_places</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</span><span id="Budget-23"><a href="#Budget-23"><span class="linenos">23</span></a>    <span class="n">start_date</span>      <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DateField</span><span class="p">()</span>
+</span><span id="Budget-24"><a href="#Budget-24"><span class="linenos">24</span></a>    <span class="n">end_date</span>        <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DateField</span><span class="p">()</span>
+</span><span id="Budget-25"><a href="#Budget-25"><span class="linenos">25</span></a>    <span class="n">alert_threshold</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">80</span><span class="p">)</span>
+</span><span id="Budget-26"><a href="#Budget-26"><span class="linenos">26</span></a>    <span class="n">status</span>          <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="n">STATUS_CHOICES</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">STATUS_ON_TRACK</span><span class="p">)</span>
+</span><span id="Budget-27"><a href="#Budget-27"><span class="linenos">27</span></a>
+</span><span id="Budget-28"><a href="#Budget-28"><span class="linenos">28</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_percentage_used</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="Budget-29"><a href="#Budget-29"><span class="linenos">29</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="Budget-30"><a href="#Budget-30"><span class="linenos">30</span></a><span class="sd">        Calculates the percentage of the budget that has been spent.</span>
+</span><span id="Budget-31"><a href="#Budget-31"><span class="linenos">31</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="Budget-32"><a href="#Budget-32"><span class="linenos">32</span></a>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">budget_amount</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+</span><span id="Budget-33"><a href="#Budget-33"><span class="linenos">33</span></a>            <span class="k">return</span> <span class="mi">0</span>
+</span><span id="Budget-34"><a href="#Budget-34"><span class="linenos">34</span></a>        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">spent_amount</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">budget_amount</span> <span class="o">*</span> <span class="mi">100</span><span class="p">)</span>
+</span><span id="Budget-35"><a href="#Budget-35"><span class="linenos">35</span></a>
+</span><span id="Budget-36"><a href="#Budget-36"><span class="linenos">36</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_remaining</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="Budget-37"><a href="#Budget-37"><span class="linenos">37</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="Budget-38"><a href="#Budget-38"><span class="linenos">38</span></a><span class="sd">        Returns the remaining balance in the budget.</span>
+</span><span id="Budget-39"><a href="#Budget-39"><span class="linenos">39</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="Budget-40"><a href="#Budget-40"><span class="linenos">40</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">budget_amount</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">spent_amount</span>
+</span><span id="Budget-41"><a href="#Budget-41"><span class="linenos">41</span></a>
+</span><span id="Budget-42"><a href="#Budget-42"><span class="linenos">42</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_status</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="Budget-43"><a href="#Budget-43"><span class="linenos">43</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="Budget-44"><a href="#Budget-44"><span class="linenos">44</span></a><span class="sd">        Determines the budget status based on the spending percentage relative </span>
+</span><span id="Budget-45"><a href="#Budget-45"><span class="linenos">45</span></a><span class="sd">        to the alert threshold.</span>
 </span><span id="Budget-46"><a href="#Budget-46"><span class="linenos">46</span></a><span class="sd">        &quot;&quot;&quot;</span>
 </span><span id="Budget-47"><a href="#Budget-47"><span class="linenos">47</span></a>        <span class="n">pct</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_percentage_used</span><span class="p">()</span>
 </span><span id="Budget-48"><a href="#Budget-48"><span class="linenos">48</span></a>        <span class="k">if</span> <span class="n">pct</span> <span class="o">&gt;=</span> <span class="mi">100</span><span class="p">:</span>
@@ -360,8 +360,8 @@
 </span><span id="Budget-53"><a href="#Budget-53"><span class="linenos">53</span></a>
 </span><span id="Budget-54"><a href="#Budget-54"><span class="linenos">54</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">update_spent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">amount</span><span class="p">):</span>
 </span><span id="Budget-55"><a href="#Budget-55"><span class="linenos">55</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="Budget-56"><a href="#Budget-56"><span class="linenos">56</span></a><span class="sd">        تحديث المبلغ المصروف، إعادة تقييم الحالة، وتشغيل تنبيهات الميزانية.</span>
-</span><span id="Budget-57"><a href="#Budget-57"><span class="linenos">57</span></a><span class="sd">        Traceability: هذا التابع يربط بين Budget و BudgetAlert.</span>
+</span><span id="Budget-56"><a href="#Budget-56"><span class="linenos">56</span></a><span class="sd">        Updates the spent amount, re-evaluates status, and triggers alerts.</span>
+</span><span id="Budget-57"><a href="#Budget-57"><span class="linenos">57</span></a><span class="sd">        Traceability: Links Budget logic to BudgetAlert generation.</span>
 </span><span id="Budget-58"><a href="#Budget-58"><span class="linenos">58</span></a><span class="sd">        &quot;&quot;&quot;</span>
 </span><span id="Budget-59"><a href="#Budget-59"><span class="linenos">59</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">spent_amount</span> <span class="o">+=</span> <span class="n">amount</span>
 </span><span id="Budget-60"><a href="#Budget-60"><span class="linenos">60</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_status</span><span class="p">()</span>
@@ -373,9 +373,8 @@
 </span></pre></div>
 
 
-            <div class="docstring"><p>Class: Budget Model
-Description: يمثل ميزانية محددة لمستخدم معين في فئة (Category) معينة.
-يتبع هذا الموديل مبدأ التتبع المالي ويحدد حالة الصرف (On Track, Near Limit, Exceeded).</p>
+            <div class="docstring"><p>Model representing a user's budget for a specific category.
+Includes logic for tracking spending progress and determining financial status.</p>
 </div>
 
 
@@ -572,17 +571,17 @@ object the first time, the query is executed.</p>
 
     </div>
     <a class="headerlink" href="#Budget.get_percentage_used"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="Budget.get_percentage_used-29"><a href="#Budget.get_percentage_used-29"><span class="linenos">29</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_percentage_used</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="Budget.get_percentage_used-30"><a href="#Budget.get_percentage_used-30"><span class="linenos">30</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="Budget.get_percentage_used-31"><a href="#Budget.get_percentage_used-31"><span class="linenos">31</span></a><span class="sd">        يحسب النسبة المئوية لما تم صرفه من الميزانية الكلية.</span>
-</span><span id="Budget.get_percentage_used-32"><a href="#Budget.get_percentage_used-32"><span class="linenos">32</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="Budget.get_percentage_used-33"><a href="#Budget.get_percentage_used-33"><span class="linenos">33</span></a>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">budget_amount</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-</span><span id="Budget.get_percentage_used-34"><a href="#Budget.get_percentage_used-34"><span class="linenos">34</span></a>            <span class="k">return</span> <span class="mi">0</span>
-</span><span id="Budget.get_percentage_used-35"><a href="#Budget.get_percentage_used-35"><span class="linenos">35</span></a>        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">spent_amount</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">budget_amount</span> <span class="o">*</span> <span class="mi">100</span><span class="p">)</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="Budget.get_percentage_used-28"><a href="#Budget.get_percentage_used-28"><span class="linenos">28</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_percentage_used</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="Budget.get_percentage_used-29"><a href="#Budget.get_percentage_used-29"><span class="linenos">29</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="Budget.get_percentage_used-30"><a href="#Budget.get_percentage_used-30"><span class="linenos">30</span></a><span class="sd">        Calculates the percentage of the budget that has been spent.</span>
+</span><span id="Budget.get_percentage_used-31"><a href="#Budget.get_percentage_used-31"><span class="linenos">31</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="Budget.get_percentage_used-32"><a href="#Budget.get_percentage_used-32"><span class="linenos">32</span></a>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">budget_amount</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+</span><span id="Budget.get_percentage_used-33"><a href="#Budget.get_percentage_used-33"><span class="linenos">33</span></a>            <span class="k">return</span> <span class="mi">0</span>
+</span><span id="Budget.get_percentage_used-34"><a href="#Budget.get_percentage_used-34"><span class="linenos">34</span></a>        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">spent_amount</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">budget_amount</span> <span class="o">*</span> <span class="mi">100</span><span class="p">)</span>
 </span></pre></div>
 
 
-            <div class="docstring"><p>يحسب النسبة المئوية لما تم صرفه من الميزانية الكلية.</p>
+            <div class="docstring"><p>Calculates the percentage of the budget that has been spent.</p>
 </div>
 
 
@@ -598,15 +597,15 @@ object the first time, the query is executed.</p>
 
     </div>
     <a class="headerlink" href="#Budget.get_remaining"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="Budget.get_remaining-37"><a href="#Budget.get_remaining-37"><span class="linenos">37</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_remaining</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="Budget.get_remaining-38"><a href="#Budget.get_remaining-38"><span class="linenos">38</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="Budget.get_remaining-39"><a href="#Budget.get_remaining-39"><span class="linenos">39</span></a><span class="sd">        يسترجع المبلغ المتبقي في الميزانية (الفرق بين المحدد والمصروف).</span>
-</span><span id="Budget.get_remaining-40"><a href="#Budget.get_remaining-40"><span class="linenos">40</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="Budget.get_remaining-41"><a href="#Budget.get_remaining-41"><span class="linenos">41</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">budget_amount</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">spent_amount</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="Budget.get_remaining-36"><a href="#Budget.get_remaining-36"><span class="linenos">36</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_remaining</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="Budget.get_remaining-37"><a href="#Budget.get_remaining-37"><span class="linenos">37</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="Budget.get_remaining-38"><a href="#Budget.get_remaining-38"><span class="linenos">38</span></a><span class="sd">        Returns the remaining balance in the budget.</span>
+</span><span id="Budget.get_remaining-39"><a href="#Budget.get_remaining-39"><span class="linenos">39</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="Budget.get_remaining-40"><a href="#Budget.get_remaining-40"><span class="linenos">40</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">budget_amount</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">spent_amount</span>
 </span></pre></div>
 
 
-            <div class="docstring"><p>يسترجع المبلغ المتبقي في الميزانية (الفرق بين المحدد والمصروف).</p>
+            <div class="docstring"><p>Returns the remaining balance in the budget.</p>
 </div>
 
 
@@ -622,9 +621,10 @@ object the first time, the query is executed.</p>
 
     </div>
     <a class="headerlink" href="#Budget.get_status"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="Budget.get_status-43"><a href="#Budget.get_status-43"><span class="linenos">43</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_status</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="Budget.get_status-44"><a href="#Budget.get_status-44"><span class="linenos">44</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="Budget.get_status-45"><a href="#Budget.get_status-45"><span class="linenos">45</span></a><span class="sd">        يحدد حالة الميزانية الحالية بناءً على نسبة الصرف مقارنة بـ alert_threshold.</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="Budget.get_status-42"><a href="#Budget.get_status-42"><span class="linenos">42</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_status</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="Budget.get_status-43"><a href="#Budget.get_status-43"><span class="linenos">43</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="Budget.get_status-44"><a href="#Budget.get_status-44"><span class="linenos">44</span></a><span class="sd">        Determines the budget status based on the spending percentage relative </span>
+</span><span id="Budget.get_status-45"><a href="#Budget.get_status-45"><span class="linenos">45</span></a><span class="sd">        to the alert threshold.</span>
 </span><span id="Budget.get_status-46"><a href="#Budget.get_status-46"><span class="linenos">46</span></a><span class="sd">        &quot;&quot;&quot;</span>
 </span><span id="Budget.get_status-47"><a href="#Budget.get_status-47"><span class="linenos">47</span></a>        <span class="n">pct</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_percentage_used</span><span class="p">()</span>
 </span><span id="Budget.get_status-48"><a href="#Budget.get_status-48"><span class="linenos">48</span></a>        <span class="k">if</span> <span class="n">pct</span> <span class="o">&gt;=</span> <span class="mi">100</span><span class="p">:</span>
@@ -635,7 +635,8 @@ object the first time, the query is executed.</p>
 </span></pre></div>
 
 
-            <div class="docstring"><p>يحدد حالة الميزانية الحالية بناءً على نسبة الصرف مقارنة بـ alert_threshold.</p>
+            <div class="docstring"><p>Determines the budget status based on the spending percentage relative 
+to the alert threshold.</p>
 </div>
 
 
@@ -653,8 +654,8 @@ object the first time, the query is executed.</p>
     <a class="headerlink" href="#Budget.update_spent"></a>
             <div class="pdoc-code codehilite"><pre><span></span><span id="Budget.update_spent-54"><a href="#Budget.update_spent-54"><span class="linenos">54</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">update_spent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">amount</span><span class="p">):</span>
 </span><span id="Budget.update_spent-55"><a href="#Budget.update_spent-55"><span class="linenos">55</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="Budget.update_spent-56"><a href="#Budget.update_spent-56"><span class="linenos">56</span></a><span class="sd">        تحديث المبلغ المصروف، إعادة تقييم الحالة، وتشغيل تنبيهات الميزانية.</span>
-</span><span id="Budget.update_spent-57"><a href="#Budget.update_spent-57"><span class="linenos">57</span></a><span class="sd">        Traceability: هذا التابع يربط بين Budget و BudgetAlert.</span>
+</span><span id="Budget.update_spent-56"><a href="#Budget.update_spent-56"><span class="linenos">56</span></a><span class="sd">        Updates the spent amount, re-evaluates status, and triggers alerts.</span>
+</span><span id="Budget.update_spent-57"><a href="#Budget.update_spent-57"><span class="linenos">57</span></a><span class="sd">        Traceability: Links Budget logic to BudgetAlert generation.</span>
 </span><span id="Budget.update_spent-58"><a href="#Budget.update_spent-58"><span class="linenos">58</span></a><span class="sd">        &quot;&quot;&quot;</span>
 </span><span id="Budget.update_spent-59"><a href="#Budget.update_spent-59"><span class="linenos">59</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">spent_amount</span> <span class="o">+=</span> <span class="n">amount</span>
 </span><span id="Budget.update_spent-60"><a href="#Budget.update_spent-60"><span class="linenos">60</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_status</span><span class="p">()</span>
@@ -663,8 +664,8 @@ object the first time, the query is executed.</p>
 </span></pre></div>
 
 
-            <div class="docstring"><p>تحديث المبلغ المصروف، إعادة تقييم الحالة، وتشغيل تنبيهات الميزانية.
-Traceability: هذا التابع يربط بين Budget و BudgetAlert.</p>
+            <div class="docstring"><p>Updates the spent amount, re-evaluates status, and triggers alerts.
+Traceability: Links Budget logic to BudgetAlert generation.</p>
 </div>
 
 
@@ -890,8 +891,8 @@ class built by <code>create_reverse_many_to_one_manager()</code> defined below.<
     <a class="headerlink" href="#BudgetAlert"></a>
             <div class="pdoc-code codehilite"><pre><span></span><span id="BudgetAlert-68"><a href="#BudgetAlert-68"><span class="linenos">68</span></a><span class="k">class</span><span class="w"> </span><span class="nc">BudgetAlert</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
 </span><span id="BudgetAlert-69"><a href="#BudgetAlert-69"><span class="linenos">69</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="BudgetAlert-70"><a href="#BudgetAlert-70"><span class="linenos">70</span></a><span class="sd">    Class: BudgetAlert Model</span>
-</span><span id="BudgetAlert-71"><a href="#BudgetAlert-71"><span class="linenos">71</span></a><span class="sd">    Description: يقوم بتخزين التنبيهات الناتجة عن تخطي الميزانية أو الاقتراب من الحد المسموح.</span>
+</span><span id="BudgetAlert-70"><a href="#BudgetAlert-70"><span class="linenos">70</span></a><span class="sd">    Model for storing notifications triggered when a budget reaches </span>
+</span><span id="BudgetAlert-71"><a href="#BudgetAlert-71"><span class="linenos">71</span></a><span class="sd">    certain thresholds.</span>
 </span><span id="BudgetAlert-72"><a href="#BudgetAlert-72"><span class="linenos">72</span></a><span class="sd">    &quot;&quot;&quot;</span>
 </span><span id="BudgetAlert-73"><a href="#BudgetAlert-73"><span class="linenos">73</span></a>    <span class="n">budget</span>       <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="n">Budget</span><span class="p">,</span> <span class="n">on_delete</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">CASCADE</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;alerts&#39;</span><span class="p">)</span>
 </span><span id="BudgetAlert-74"><a href="#BudgetAlert-74"><span class="linenos">74</span></a>    <span class="n">triggered_at</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DateTimeField</span><span class="p">(</span><span class="n">auto_now_add</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -900,9 +901,9 @@ class built by <code>create_reverse_many_to_one_manager()</code> defined below.<
 </span><span id="BudgetAlert-77"><a href="#BudgetAlert-77"><span class="linenos">77</span></a>    <span class="nd">@classmethod</span>
 </span><span id="BudgetAlert-78"><a href="#BudgetAlert-78"><span class="linenos">78</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">check_and_fire</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">budget</span><span class="p">):</span>
 </span><span id="BudgetAlert-79"><a href="#BudgetAlert-79"><span class="linenos">79</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="BudgetAlert-80"><a href="#BudgetAlert-80"><span class="linenos">80</span></a><span class="sd">        دالة منطقية تقوم بفحص حالة الميزانية وإنشاء سجل تنبيه جديد إذا لزم الأمر.</span>
+</span><span id="BudgetAlert-80"><a href="#BudgetAlert-80"><span class="linenos">80</span></a><span class="sd">        Analyzes budget status and creates a new alert record if necessary.</span>
 </span><span id="BudgetAlert-81"><a href="#BudgetAlert-81"><span class="linenos">81</span></a><span class="sd">        Args:</span>
-</span><span id="BudgetAlert-82"><a href="#BudgetAlert-82"><span class="linenos">82</span></a><span class="sd">            budget: كائن من نوع Budget المراد فصحه.</span>
+</span><span id="BudgetAlert-82"><a href="#BudgetAlert-82"><span class="linenos">82</span></a><span class="sd">            budget (Budget): The budget instance to evaluate.</span>
 </span><span id="BudgetAlert-83"><a href="#BudgetAlert-83"><span class="linenos">83</span></a><span class="sd">        &quot;&quot;&quot;</span>
 </span><span id="BudgetAlert-84"><a href="#BudgetAlert-84"><span class="linenos">84</span></a>        <span class="n">status</span> <span class="o">=</span> <span class="n">budget</span><span class="o">.</span><span class="n">get_status</span><span class="p">()</span>
 </span><span id="BudgetAlert-85"><a href="#BudgetAlert-85"><span class="linenos">85</span></a>        <span class="k">if</span> <span class="n">status</span> <span class="o">==</span> <span class="n">Budget</span><span class="o">.</span><span class="n">STATUS_NEAR_LIMIT</span><span class="p">:</span>
@@ -918,8 +919,8 @@ class built by <code>create_reverse_many_to_one_manager()</code> defined below.<
 </span></pre></div>
 
 
-            <div class="docstring"><p>Class: BudgetAlert Model
-Description: يقوم بتخزين التنبيهات الناتجة عن تخطي الميزانية أو الاقتراب من الحد المسموح.</p>
+            <div class="docstring"><p>Model for storing notifications triggered when a budget reaches 
+certain thresholds.</p>
 </div>
 
 
@@ -992,9 +993,9 @@ object the first time, the query is executed.</p>
             <div class="pdoc-code codehilite"><pre><span></span><span id="BudgetAlert.check_and_fire-77"><a href="#BudgetAlert.check_and_fire-77"><span class="linenos">77</span></a>    <span class="nd">@classmethod</span>
 </span><span id="BudgetAlert.check_and_fire-78"><a href="#BudgetAlert.check_and_fire-78"><span class="linenos">78</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">check_and_fire</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">budget</span><span class="p">):</span>
 </span><span id="BudgetAlert.check_and_fire-79"><a href="#BudgetAlert.check_and_fire-79"><span class="linenos">79</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="BudgetAlert.check_and_fire-80"><a href="#BudgetAlert.check_and_fire-80"><span class="linenos">80</span></a><span class="sd">        دالة منطقية تقوم بفحص حالة الميزانية وإنشاء سجل تنبيه جديد إذا لزم الأمر.</span>
+</span><span id="BudgetAlert.check_and_fire-80"><a href="#BudgetAlert.check_and_fire-80"><span class="linenos">80</span></a><span class="sd">        Analyzes budget status and creates a new alert record if necessary.</span>
 </span><span id="BudgetAlert.check_and_fire-81"><a href="#BudgetAlert.check_and_fire-81"><span class="linenos">81</span></a><span class="sd">        Args:</span>
-</span><span id="BudgetAlert.check_and_fire-82"><a href="#BudgetAlert.check_and_fire-82"><span class="linenos">82</span></a><span class="sd">            budget: كائن من نوع Budget المراد فصحه.</span>
+</span><span id="BudgetAlert.check_and_fire-82"><a href="#BudgetAlert.check_and_fire-82"><span class="linenos">82</span></a><span class="sd">            budget (Budget): The budget instance to evaluate.</span>
 </span><span id="BudgetAlert.check_and_fire-83"><a href="#BudgetAlert.check_and_fire-83"><span class="linenos">83</span></a><span class="sd">        &quot;&quot;&quot;</span>
 </span><span id="BudgetAlert.check_and_fire-84"><a href="#BudgetAlert.check_and_fire-84"><span class="linenos">84</span></a>        <span class="n">status</span> <span class="o">=</span> <span class="n">budget</span><span class="o">.</span><span class="n">get_status</span><span class="p">()</span>
 </span><span id="BudgetAlert.check_and_fire-85"><a href="#BudgetAlert.check_and_fire-85"><span class="linenos">85</span></a>        <span class="k">if</span> <span class="n">status</span> <span class="o">==</span> <span class="n">Budget</span><span class="o">.</span><span class="n">STATUS_NEAR_LIMIT</span><span class="p">:</span>
@@ -1007,9 +1008,9 @@ object the first time, the query is executed.</p>
 </span></pre></div>
 
 
-            <div class="docstring"><p>دالة منطقية تقوم بفحص حالة الميزانية وإنشاء سجل تنبيه جديد إذا لزم الأمر.
+            <div class="docstring"><p>Analyzes budget status and creates a new alert record if necessary.
 Args:
-    budget: كائن من نوع Budget المراد فصحه.</p>
+    budget (Budget): The budget instance to evaluate.</p>
 </div>
 
 
