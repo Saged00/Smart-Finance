@@ -6,6 +6,11 @@ from .forms import RegisterForm, LoginForm
 
 
 def register_view(request):
+    """
+    Handles new user registration. 
+    If the user is already authenticated, redirects to the dashboard. 
+    Otherwise, processes the RegisterForm and logs in the new user upon success.
+    """
     if request.user.is_authenticated:
         return redirect('/budgets/dashboard/')
     form = RegisterForm(request.POST or None)
@@ -17,6 +22,11 @@ def register_view(request):
 
 
 def login_view(request):
+    """
+    Manages user login authentication.
+    Redirects authenticated users to the dashboard. Validates credentials 
+    via LoginForm and initiates a secure session.
+    """
     if request.user.is_authenticated:
         return redirect('/budgets/dashboard/')
     form = LoginForm(request.POST or None)
@@ -27,10 +37,17 @@ def login_view(request):
 
 
 def logout_view(request):
+    """
+    Terminates the current user session and redirects to the login page.
+    """
     logout(request)
     return redirect('/users/login/')
 
 
 @login_required
 def profile_view(request):
+    """
+    Renders the profile page for the currently logged-in user.
+    Access is restricted to authenticated users only.
+    """
     return render(request, 'users/profile.html')
