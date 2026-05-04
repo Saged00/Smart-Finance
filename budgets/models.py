@@ -3,9 +3,8 @@ from django.conf import settings
 
 class Budget(models.Model):
     """
-    Class: Budget Model
-    Description: يمثل ميزانية محددة لمستخدم معين في فئة (Category) معينة.
-    يتبع هذا الموديل مبدأ التتبع المالي ويحدد حالة الصرف (On Track, Near Limit, Exceeded).
+    Model representing a user's budget for a specific category.
+    Includes logic for tracking spending progress and determining financial status.
     """
     STATUS_ON_TRACK   = 'on_track'
     STATUS_NEAR_LIMIT = 'near_limit'
@@ -27,7 +26,7 @@ class Budget(models.Model):
 
     def get_percentage_used(self):
         """
-        يحسب النسبة المئوية لما تم صرفه من الميزانية الكلية.
+        Calculates the percentage of the budget that has been spent.
         """
         if self.budget_amount == 0:
             return 0
@@ -35,13 +34,14 @@ class Budget(models.Model):
 
     def get_remaining(self):
         """
-        يسترجع المبلغ المتبقي في الميزانية (الفرق بين المحدد والمصروف).
+        Returns the remaining balance in the budget.
         """
         return self.budget_amount - self.spent_amount
 
     def get_status(self):
         """
-        يحدد حالة الميزانية الحالية بناءً على نسبة الصرف مقارنة بـ alert_threshold.
+        Determines the budget status based on the spending percentage relative 
+        to the alert threshold.
         """
         pct = self.get_percentage_used()
         if pct >= 100:
@@ -52,8 +52,8 @@ class Budget(models.Model):
 
     def update_spent(self, amount):
         """
-        تحديث المبلغ المصروف، إعادة تقييم الحالة، وتشغيل تنبيهات الميزانية.
-        Traceability: هذا التابع يربط بين Budget و BudgetAlert.
+        Updates the spent amount, re-evaluates status, and triggers alerts.
+        Traceability: Links Budget logic to BudgetAlert generation.
         """
         self.spent_amount += amount
         self.status = self.get_status()
@@ -66,8 +66,8 @@ class Budget(models.Model):
 
 class BudgetAlert(models.Model):
     """
-    Class: BudgetAlert Model
-    Description: يقوم بتخزين التنبيهات الناتجة عن تخطي الميزانية أو الاقتراب من الحد المسموح.
+    Model for storing notifications triggered when a budget reaches 
+    certain thresholds.
     """
     budget       = models.ForeignKey(Budget, on_delete=models.CASCADE, related_name='alerts')
     triggered_at = models.DateTimeField(auto_now_add=True)
@@ -76,9 +76,9 @@ class BudgetAlert(models.Model):
     @classmethod
     def check_and_fire(cls, budget):
         """
-        دالة منطقية تقوم بفحص حالة الميزانية وإنشاء سجل تنبيه جديد إذا لزم الأمر.
+        Analyzes budget status and creates a new alert record if necessary.
         Args:
-            budget: كائن من نوع Budget المراد فصحه.
+            budget (Budget): The budget instance to evaluate.
         """
         status = budget.get_status()
         if status == Budget.STATUS_NEAR_LIMIT:
