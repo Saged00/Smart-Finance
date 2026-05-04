@@ -7,8 +7,8 @@ from .forms   import BudgetForm
 @login_required
 def dashboard_view(request):
     """
-    عرض لوحة التحكم الرئيسية (Dashboard).
-    يتم استرجاع ميزانيات المستخدم الحالي وآخر 5 تنبيهات تم إنشاؤها.
+    Renders the main dashboard for the user.
+    Retrieves the user's budgets and the most recent 5 financial alerts.
     """
     budgets = Budget.objects.filter(user=request.user)
     alerts  = BudgetAlert.objects.filter(budget__user=request.user).order_by('-triggered_at')[:5]
@@ -22,7 +22,7 @@ def dashboard_view(request):
 @login_required
 def budget_list_view(request):
     """
-    عرض قائمة شاملة بجميع ميزانيات المستخدم الحالي.
+    Displays a comprehensive list of all budget categories managed by the current user.
     """
     budgets = Budget.objects.filter(user=request.user)
     return render(request, 'budgets/budget_list.html', {'budgets': budgets})
@@ -31,8 +31,8 @@ def budget_list_view(request):
 @login_required
 def budget_create_view(request):
     """
-    إنشاء ميزانية جديدة.
-    يتم التحقق من صحة البيانات المسجلة، ربطها بالمستخدم، وتحديد حالتها (Status).
+    Handles the creation of a new budget category.
+    Validates user input, assigns ownership, and determines initial budget status.
     """
     form = BudgetForm(request.POST or None)
     if request.method == 'POST' and form.is_valid():
@@ -47,9 +47,9 @@ def budget_create_view(request):
 @login_required
 def budget_edit_view(request, pk):
     """
-    تعديل ميزانية موجودة مسبقاً.
+    Allows the user to modify an existing budget record.
     Args:
-        pk: الرقم التعريفي للميزانية المراد تعديلها.
+        pk (int): The primary key of the budget entry to update.
     """
     budget = get_object_or_404(Budget, pk=pk, user=request.user)
     form   = BudgetForm(request.POST or None, instance=budget)
@@ -64,9 +64,9 @@ def budget_edit_view(request, pk):
 @login_required
 def budget_delete_view(request, pk):
     """
-    حذف ميزانية محددة من النظام.
+    Deletes a specific budget record from the system.
     Args:
-        pk: الرقم التعريفي للميزانية.
+        pk (int): The primary key of the budget to be deleted.
     """
     budget = get_object_or_404(Budget, pk=pk, user=request.user)
     if request.method == 'POST':
@@ -77,8 +77,8 @@ def budget_delete_view(request, pk):
 @login_required
 def budget_alerts_view(request):
     """
-    عرض صفحة التنبيهات مع ملخص مالي.
-    يتم حساب إجمالي الميزانيات وإجمالي المصروفات لعرضها في صفحة التنبيهات.
+    Provides a detailed view of budget notifications and financial summaries.
+    Calculates total budget versus total spending for reporting purposes.
     """
     alerts  = BudgetAlert.objects.filter(budget__user=request.user).order_by('-triggered_at')
     budgets = Budget.objects.filter(user=request.user)
