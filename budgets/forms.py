@@ -3,9 +3,9 @@ from .models import Budget
 
 class BudgetForm(forms.ModelForm):
     """
-    Class: BudgetForm
-    Description: نموذج (Form) مخصص للتعامل مع بيانات الميزانية.
-    يتم استخدامه لإنشاء ميزانيات جديدة أو تعديل الحالية مع ضمان صحة المدخلات وتنسيق التواريخ.
+    BudgetForm handles the creation and update of budget records.
+    It ensures data integrity and provides formatted date inputs and 
+    validation for financial constraints.
     """
     class Meta:
         model  = Budget
@@ -18,8 +18,8 @@ class BudgetForm(forms.ModelForm):
 
     def clean_budget_amount(self):
         """
-        التحقق من صحة مبلغ الميزانية (Validation).
-        يضمن أن المستخدم لن يدخل قيمة صفرية أو سالبة للميزانية.
+        Validates the budget_amount field.
+        Ensures that the user enters a positive value greater than zero.
         """
         amount = self.cleaned_data.get('budget_amount')
         if amount and amount <= 0:
