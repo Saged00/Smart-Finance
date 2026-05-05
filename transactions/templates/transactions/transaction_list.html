@@ -1,0 +1,188 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Transactions — Smart Finance</title>
+  <link rel="stylesheet" href="{% static 'css/Base.css' %}">
+  <link rel="stylesheet" href="{% static 'css/transactions.css' %}">
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="navbar__inner">
+      <a href="{% url 'dashboard' %}" class="navbar__logo">
+        <div class="navbar__logo-icon">SF</div>Smart Finance
+      </a>
+      <ul class="navbar__links">
+        <li><a href="{% url 'dashboard' %}"     class="navbar__link">Dashboard</a></li>
+        <li><a href="{% url 'transactions' %}"  class="navbar__link active">Transactions</a></li>
+        <li><a href="{% url 'budget-alerts' %}" class="navbar__link">Budget Alerts</a></li>
+        <li><a href="{% url 'budget-list' %}"   class="navbar__link">Budgets</a></li>
+        <li><a href="{% url 'goals' %}"         class="navbar__link">Savings Goals</a></li>
+        <li><a href="{% url 'reports' %}"       class="navbar__link">Reports</a></li>
+      </ul>
+      <div class="navbar__right">
+        <a href="{% url 'profile' %}" style="text-decoration: none; display: flex; align-items: center; gap: 8px;">
+          <div class="navbar__avatar">{{ user.full_name|slice:":2"|upper }}</div>
+          <span class="navbar__user-name">{{ user.full_name|truncatewords:1 }}</span>
+        </a>
+        <a href="{% url 'logout' %}" style="font-size:.85rem;color:#6b7280;margin-left:8px;">Logout</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="page-wrapper">
+
+    <!-- Page Header -->
+    <header class="tx-page-header">
+      <div class="tx-page-header__text">
+        <h1>Add transaction</h1>
+        <p>Record income or spending. Expenses update matching budget periods automatically.</p>
+      </div>
+    </header>
+
+    <div class="tx-accent-line"></div>
+
+    <!-- Add Transaction Form -->
+    <div class="tx-form-card">
+      <form method="POST" id="txForm">
+        {% csrf_token %}
+
+        {% if form.errors %}
+        <div class="tx-form-error">
+          {% for field in form %}{% for error in field.errors %}{{ error }}<br>{% endfor %}{% endfor %}
+          {% for error in form.non_field_errors %}{{ error }}<br>{% endfor %}
+        </div>
+        {% endif %}
+
+        <div class="tx-form-group">
+          <label class="tx-label">Kind</label>
+          <select name="kind" id="kindSelect" class="tx-input" required>
+            <option value="">---------</option>
+            <option value="income"  {% if form.kind.value == 'income' %}selected{% endif %}>Income</option>
+            <option value="expense" {% if form.kind.value == 'expense' %}selected{% endif %}>Expense</option>
+          </select>
+        </div>
+
+        <div class="tx-form-group">
+          <label class="tx-label">Category</label>
+          <select name="category" id="categorySelect" class="tx-input" required>
+            <option value="">---------</option>
+          </select>
+        </div>
+
+        <div class="tx-form-group">
+          <label class="tx-label">Amount ($)</label>
+          <input type="number" name="amount" class="tx-input"
+                 placeholder="0.00" step="0.01" min="0.01"
+                 value="{{ form.amount.value|default:'' }}" required>
+        </div>
+
+        <div class="tx-form-group">
+          <label class="tx-label">Description</label>
+          <input type="text" name="description" class="tx-input"
+                 placeholder="What is this transaction for?"
+                 value="{{ form.description.value|default:'' }}" required>
+        </div>
+
+        <div class="tx-form-group">
+          <label class="tx-label">Occurred at</label>
+          <input type="datetime-local" name="occurred_at" class="tx-input"
+                 value="{{ form.occurred_at.value|default:'' }}" required>
+        </div>
+
+        <div class="tx-form-actions">
+          <button type="submit" class="tx-btn-save">Save transaction</button>
+          <a href="{% url 'dashboard' %}" class="tx-btn-cancel">Cancel</a>
+        </div>
+      </form>
+    </div>
+
+    <!-- Recent Transactions -->
+    {% if transactions %}
+    <div class="tx-recent-section">
+      <h2 class="tx-recent-title">Recent Transactions</h2>
+      <div class="tx-recent-card">
+        {% for tx in transactions %}
+        <div class="tx-row">
+          <div class="tx-row__left">
+            <div class="tx-type-dot {% if tx.type == 'income' %}dot-income{% else %}dot-expense{% endif %}"></div>
+            <div class="tx-row__info">
+              <span class="tx-row__desc">{{ tx.description }}</span>
+              <span class="tx-row__meta">{{ tx.category }} · {{ tx.date|date:"M d, Y" }}</span>
+            </div>
+          </div>
+          <div class="tx-row__right">
+            <span class="tx-row__amount {% if tx.type == 'income' %}amount-income{% else %}amount-expense{% endif %}">
+              {% if tx.type == 'income' %}+{% else %}-{% endif %}${{ tx.amount }}
+            </span>
+            <div class="tx-row__actions">
+              {% if tx.type == 'income' %}
+              <a href="{% url 'income-delete' tx.id %}" class="tx-action-delete" title="Delete"
+                 onclick="return confirm('Delete this transaction?')">✕</a>
+              {% else %}
+              <a href="{% url 'expense-delete' tx.id %}" class="tx-action-delete" title="Delete"
+                 onclick="return confirm('Delete this transaction?')">✕</a>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+
+  </main>
+
+  <script>
+    // Income source categories
+    const incomeCategories = [
+      { value: 'salary',     label: 'Salary' },
+      { value: 'freelance',  label: 'Freelance' },
+      { value: 'investment', label: 'Investment' },
+      { value: 'gift',       label: 'Gift' },
+      { value: 'bonus',      label: 'Bonus' },
+      { value: 'other',      label: 'Other' },
+    ];
+
+    // Expense categories from user's budgets
+    const expenseCategories = [
+      {% for cat in budget_categories %}
+      { value: '{{ cat }}', label: '{{ cat }}' },
+      {% endfor %}
+      { value: 'other', label: 'Other' },
+    ];
+
+    const kindSelect     = document.getElementById('kindSelect');
+    const categorySelect = document.getElementById('categorySelect');
+
+    function updateCategories() {
+      const kind = kindSelect.value;
+      const cats = kind === 'income' ? incomeCategories : kind === 'expense' ? expenseCategories : [];
+
+      categorySelect.innerHTML = '<option value="">---------</option>';
+      cats.forEach(cat => {
+        const opt = document.createElement('option');
+        opt.value = cat.value;
+        opt.textContent = cat.label;
+        categorySelect.appendChild(opt);
+      });
+
+      // Restore selected value if form was submitted with errors
+      const savedCat = '{{ form.category.value|default:"" }}';
+      if (savedCat) {
+        categorySelect.value = savedCat;
+      }
+    }
+
+    kindSelect.addEventListener('change', updateCategories);
+
+    // Init on page load
+    updateCategories();
+  </script>
+
+</body>
+</html>
+

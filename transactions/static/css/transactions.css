@@ -1,0 +1,305 @@
+-/* ============================================================
+   Transactions Page Styles
+   Matches the user's design: clean card, purple/blue accents,
+   uppercase labels, soft backgrounds
+   ============================================================ */
+
+/* ---------- Page Header ---------- */
+.tx-page-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.tx-page-header__text h1 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--primary);
+  letter-spacing: -0.5px;
+  margin-bottom: 6px;
+}
+
+.tx-page-header__text p {
+  font-size: 0.92rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  max-width: 520px;
+}
+
+.tx-page-header__info {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--primary);
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  cursor: help;
+}
+
+.tx-page-header__info svg {
+  width: 18px;
+  height: 18px;
+  color: #fff;
+}
+
+/* ---------- Accent Line ---------- */
+.tx-accent-line {
+  width: 60px;
+  height: 4px;
+  border-radius: 4px;
+  background: linear-gradient(90deg, var(--primary), #6366f1);
+  margin-bottom: 32px;
+}
+
+/* ---------- Form Card ---------- */
+.tx-form-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-sm);
+  padding: 36px 40px;
+  max-width: 700px;
+}
+
+.tx-form-error {
+  color: var(--danger);
+  font-size: 0.85rem;
+  margin-bottom: 18px;
+  padding: 12px 16px;
+  background: var(--danger-light);
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(224, 36, 36, 0.15);
+}
+
+/* ---------- Form Controls ---------- */
+.tx-form-group {
+  margin-bottom: 24px;
+}
+
+.tx-label {
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+}
+
+.tx-input {
+  width: 100%;
+  padding: 13px 16px;
+  font-size: 0.95rem;
+  font-family: 'Inter', sans-serif;
+  color: var(--text-primary);
+  background: var(--bg);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-md);
+  transition: var(--transition);
+  outline: none;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.tx-input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4px rgba(26, 86, 219, 0.08);
+  background: var(--surface);
+}
+
+.tx-input::placeholder {
+  color: var(--text-muted);
+}
+
+/* Select arrow */
+select.tx-input {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%239ca3af' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  padding-right: 40px;
+  cursor: pointer;
+}
+
+/* ---------- Form Actions ---------- */
+.tx-form-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 32px;
+}
+
+.tx-btn-save {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 28px;
+  font-size: 0.92rem;
+  font-weight: 600;
+  font-family: 'Inter', sans-serif;
+  color: #fff;
+  background: var(--primary);
+  border: none;
+  border-radius: var(--radius-md);
+  box-shadow: 0 4px 14px rgba(26, 86, 219, 0.25);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.tx-btn-save:hover {
+  background: var(--primary-dark);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(26, 86, 219, 0.35);
+}
+
+.tx-btn-save:active {
+  transform: translateY(0);
+}
+
+.tx-btn-cancel {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 28px;
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--primary);
+  background: transparent;
+  border: 1.5px solid var(--primary);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.tx-btn-cancel:hover {
+  background: var(--primary-light);
+}
+
+/* ---------- Recent Transactions ---------- */
+.tx-recent-section {
+  margin-top: 44px;
+}
+
+.tx-recent-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 16px;
+  letter-spacing: -0.3px;
+}
+
+.tx-recent-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-xs);
+  overflow: hidden;
+}
+
+.tx-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 24px;
+  border-bottom: 1px solid var(--border-soft);
+  transition: var(--transition);
+}
+
+.tx-row:last-child { border-bottom: none; }
+.tx-row:hover { background: var(--bg); }
+
+.tx-row__left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  min-width: 0;
+}
+
+.tx-type-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.dot-income  { background: var(--secondary); }
+.dot-expense { background: var(--danger); }
+
+.tx-row__info {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.tx-row__desc {
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tx-row__meta {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.tx-row__right {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-shrink: 0;
+}
+
+.tx-row__amount {
+  font-size: 0.95rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.amount-income  { color: var(--secondary); }
+.amount-expense { color: var(--danger); }
+
+.tx-row__actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.tx-action-delete {
+  width: 28px;
+  height: 28px;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: var(--transition);
+  display: grid;
+  place-items: center;
+  text-decoration: none;
+}
+
+.tx-action-delete:hover {
+  color: var(--danger);
+  background: var(--danger-light);
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 600px) {
+  .tx-form-card {
+    padding: 24px 20px;
+    border-radius: var(--radius-lg);
+  }
+  .tx-form-actions {
+    flex-direction: column;
+  }
+  .tx-row {
+    padding: 12px 16px;
+  }
+  .tx-row__actions { opacity: 1; }
+}
