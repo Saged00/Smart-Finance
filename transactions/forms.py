@@ -3,7 +3,12 @@ from .models import Income, Expense
 
 
 class TransactionForm(forms.Form):
-    """Unified form for creating both Income and Expense transactions."""
+    """
+    A unified non-model form used for creating both Income and Expense transactions.
+    
+    This form provides a 'kind' field to switch between transaction types 
+    and handles shared fields like amount, category, and date.
+    """
 
     KIND_CHOICES = [
         ('',        '---------'),
@@ -30,6 +35,7 @@ class TransactionForm(forms.Form):
     )
 
     def clean_amount(self):
+        """Validates that the transaction amount is a positive value."""
         amount = self.cleaned_data.get('amount')
         if amount and amount <= 0:
             raise forms.ValidationError("Amount must be positive.")
@@ -37,6 +43,11 @@ class TransactionForm(forms.Form):
 
 
 class IncomeForm(forms.ModelForm):
+    """
+    ModelForm for creating and updating Income records.
+    
+    Maps directly to the Income model and includes validation for the amount field.
+    """
     class Meta:
         model  = Income
         fields = ['amount', 'date', 'description', 'payment_method', 'source']
@@ -45,6 +56,7 @@ class IncomeForm(forms.ModelForm):
         }
 
     def clean_amount(self):
+        """Ensures the income amount is greater than zero."""
         amount = self.cleaned_data.get('amount')
         if amount and amount <= 0:
             raise forms.ValidationError("Amount must be positive.")
@@ -52,6 +64,13 @@ class IncomeForm(forms.ModelForm):
 
 
 class ExpenseForm(forms.ModelForm):
+    """
+    ModelForm for managing Expense records.
+    
+    Includes logic to filter the available budgets to only those belonging 
+    to the current user. Ensures expenses are correctly linked to user-specific 
+    financial limits.
+    """
     class Meta:
         model  = Expense
         fields = ['amount', 'date', 'description', 'payment_method', 'notes', 'budget']
@@ -61,6 +80,10 @@ class ExpenseForm(forms.ModelForm):
         }
 
     def __init__(self, *args, user=None, **kwargs):
+        """
+        Initializes the form and filters the budget queryset based on the 
+        provided user to ensure data isolation.
+        """
         super().__init__(*args, **kwargs)
         if user:
             self.fields['budget'].queryset = self.fields['budget'].queryset.filter(user=user)
@@ -68,6 +91,7 @@ class ExpenseForm(forms.ModelForm):
         self.fields['notes'].required = False
 
     def clean_amount(self):
+        """Validates that the expense amount is a positive value."""
         amount = self.cleaned_data.get('amount')
         if amount and amount <= 0:
             raise forms.ValidationError("Amount must be positive.")
