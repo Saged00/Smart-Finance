@@ -8,8 +8,13 @@ from budgets.models import Budget
 
 @login_required
 def transaction_list_view(request):
-    """Main transactions page — shows the Add Transaction form
-    and a list of recent transactions below."""
+    """
+    Main dashboard for transaction management.
+    
+    Handles the display and submission of the unified TransactionForm. 
+    It dynamically creates either an Income or Expense record based on user input, 
+    automatically linking expenses to matching budget categories.
+    """
 
     user_budgets = Budget.objects.filter(user=request.user)
 
@@ -31,7 +36,7 @@ def transaction_list_view(request):
                     source=category,
                 )
             else:
-                # Try to match category to a user budget
+                # Automating budget synchronization
                 budget = user_budgets.filter(category=category).first()
                 expense = Expense(
                     user=request.user,
@@ -46,7 +51,7 @@ def transaction_list_view(request):
     else:
         form = TransactionForm(initial={'occurred_at': timezone.now()})
 
-    # Gather recent transactions for the list
+    # Data Aggregation for the transaction feed
     incomes  = Income.objects.filter(user=request.user)
     expenses = Expense.objects.filter(user=request.user)
 
@@ -72,12 +77,12 @@ def transaction_list_view(request):
             'created_at':  e.created_at,
         })
 
+    # Sort records chronologically (descending)
     all_transactions.sort(key=lambda x: (x['date'], x['created_at']), reverse=True)
 
     total_income  = sum(i.amount for i in incomes)
     total_expense = sum(e.amount for e in expenses)
 
-    # Budget categories for expense kind
     budget_categories = list(user_budgets.values_list('category', flat=True))
 
     return render(request, 'transactions/transaction_list.html', {
@@ -91,10 +96,11 @@ def transaction_list_view(request):
     })
 
 
-# ── Income CRUD ──────────────────────────────────────────────
+# ── Income CRUD Operations ──────────────────────────────────────────
 
 @login_required
 def income_create_view(request):
+    """Processes the creation of a new income record via IncomeForm."""
     form = IncomeForm(request.POST or None)
     if request.method == 'POST' and form.is_valid():
         income      = form.save(commit=False)
@@ -108,6 +114,7 @@ def income_create_view(request):
 
 @login_required
 def income_edit_view(request, pk):
+    """Updates an existing income record while ensuring user ownership."""
     income = get_object_or_404(Income, pk=pk, user=request.user)
     form   = IncomeForm(request.POST or None, instance=income)
     if request.method == 'POST' and form.is_valid():
@@ -120,15 +127,17 @@ def income_edit_view(request, pk):
 
 @login_required
 def income_delete_view(request, pk):
+    """Permanently removes an income record for the authenticated user."""
     income = get_object_or_404(Income, pk=pk, user=request.user)
     income.delete()
     return redirect('transactions')
 
 
-# ── Expense CRUD ─────────────────────────────────────────────
+# ── Expense CRUD Operations ─────────────────────────────────────────
 
 @login_required
 def expense_create_view(request):
+    """Processes the creation of an expense and updates budget spending."""
     form = ExpenseForm(request.POST or None, user=request.user)
     if request.method == 'POST' and form.is_valid():
         expense      = form.save(commit=False)
@@ -142,6 +151,7 @@ def expense_create_view(request):
 
 @login_required
 def expense_edit_view(request, pk):
+    """Modifies an existing expense and adjusts the linked budget accordingly."""
     expense = get_object_or_404(Expense, pk=pk, user=request.user)
     form    = ExpenseForm(request.POST or None, instance=expense, user=request.user)
     if request.method == 'POST' and form.is_valid():
@@ -154,6 +164,7 @@ def expense_edit_view(request, pk):
 
 @login_required
 def expense_delete_view(request, pk):
+    """Removes an expense and reverts the spent amount in the associated budget."""
     expense = get_object_or_404(Expense, pk=pk, user=request.user)
     expense.delete()
     return redirect('transactions')
