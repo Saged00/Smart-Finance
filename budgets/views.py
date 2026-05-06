@@ -1,7 +1,10 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
+from django.utils import timezone
+from django.db.models import Sum
 from .models  import Budget, BudgetAlert
 from .forms   import BudgetForm
+from transactions.models import Income, Expense
 
 
 @login_required
@@ -12,10 +15,24 @@ def dashboard_view(request):
     """
     budgets = Budget.objects.filter(user=request.user)
     alerts  = BudgetAlert.objects.filter(budget__user=request.user).order_by('-triggered_at')[:5]
+
+    # Transaction stats
+    now = timezone.now()
+    total_income  = Income.objects.filter(user=request.user).aggregate(s=Sum('amount'))['s'] or 0
+    total_expense = Expense.objects.filter(user=request.user).aggregate(s=Sum('amount'))['s'] or 0
+    total_balance = total_income - total_expense
+
+    month_income  = Income.objects.filter(user=request.user, date__year=now.year, date__month=now.month).aggregate(s=Sum('amount'))['s'] or 0
+    month_expense = Expense.objects.filter(user=request.user, date__year=now.year, date__month=now.month).aggregate(s=Sum('amount'))['s'] or 0
+
     return render(request, 'budgets/dashboard.html', {
-        'budgets': budgets,
-        'alerts':  alerts,
-        'user':    request.user,
+        'budgets':       budgets,
+        'alerts':        alerts,
+        'user':          request.user,
+        'total_balance': total_balance,
+        'month_income':  month_income,
+        'month_expense': month_expense,
+        'current_month': now.strftime('%B %Y').upper(),
     })
 
 

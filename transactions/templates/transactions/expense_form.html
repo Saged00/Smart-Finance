@@ -1,0 +1,78 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ action }} Expense — Smart Finance</title>
+  <link rel="stylesheet" href="{% static 'css/Base.css' %}">
+  <link rel="stylesheet" href="{% static 'css/login.css' %}">
+</head>
+<body class="auth-page">
+  <main class="auth-container" style="max-width:520px">
+    <header class="auth-header">
+      <div class="auth-logo">SF</div>
+      <h1>{{ action }} Expense</h1>
+      <p>Record a new expense transaction.</p>
+    </header>
+    <div class="auth-body">
+      <form method="POST">
+        {% csrf_token %}
+        {% if form.errors %}
+          <div style="color:#e02424;font-size:.85rem;margin-bottom:12px;padding:10px;background:#fde8e8;border-radius:8px;">
+            {% for field in form %}{% for error in field.errors %}{{ error }}<br>{% endfor %}{% endfor %}
+          </div>
+        {% endif %}
+
+        <div class="form-group">
+          <label>Description</label>
+          <input type="text" name="description" class="form-control"
+                 placeholder="e.g. Grocery shopping" value="{{ form.description.value|default:'' }}" required>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Amount ($)</label>
+            <input type="number" name="amount" class="form-control"
+                   placeholder="150" value="{{ form.amount.value|default:'' }}" step="0.01" required>
+          </div>
+          <div class="form-group">
+            <label>Budget (optional)</label>
+            <select name="budget" class="form-control">
+              <option value="">— No budget —</option>
+              {% for value, label in form.budget.field.choices %}
+                {% if value %}
+                <option value="{{ value }}" {% if form.budget.value|stringformat:"s" == value|stringformat:"s" %}selected{% endif %}>{{ label }}</option>
+                {% endif %}
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Date</label>
+            <input type="date" name="date" class="form-control"
+                   value="{{ form.date.value|default:'' }}" required>
+          </div>
+          <div class="form-group">
+            <label>Payment Method</label>
+            <select name="payment_method" class="form-control">
+              {% for value, label in form.payment_method.field.choices %}
+              <option value="{{ value }}" {% if form.payment_method.value == value %}selected{% endif %}>{{ label }}</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Notes (optional)</label>
+          <textarea name="notes" class="form-control" rows="3"
+                    placeholder="Any additional details...">{{ form.notes.value|default:'' }}</textarea>
+        </div>
+
+        <button type="submit" class="btn-auth">{{ action }} Expense</button>
+      </form>
+      <div class="auth-footer">
+        <a href="{% url 'transactions' %}">← Back to Transactions</a>
+      </div>
+    </div>
+  </main>
+</body>
+</html>

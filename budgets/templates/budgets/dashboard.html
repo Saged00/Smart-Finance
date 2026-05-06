@@ -15,6 +15,7 @@
       </a>
       <ul class="navbar__links">
         <li><a href="{% url 'dashboard' %}"      class="navbar__link active">Dashboard</a></li>
+        <li><a href="{% url 'transactions' %}"   class="navbar__link">Transactions</a></li>
         <li><a href="{% url 'budget-alerts' %}"  class="navbar__link">Budget Alerts</a></li>
         <li><a href="{% url 'budget-list' %}"    class="navbar__link">Budgets</a></li>
         <li><a href="{% url 'goals' %}"         class="navbar__link">Savings Goals</a></li>
@@ -36,26 +37,20 @@
         <h1>Welcome back, {{ user.full_name }}</h1>
         <p>Here is your financial overview for this month.</p>
       </div>
-      <a href="{% url 'budget-create' %}" class="btn btn-primary">+ Add Budget</a>
     </header>
 
     <div class="dashboard-stats">
       <div class="dash-card">
-        <div class="dash-card__title">Total Budgets</div>
-        <div class="dash-card__amount">{{ budgets.count }}</div>
-        <div class="dash-card__desc">active this month</div>
+        <div class="dash-card__title">Total Balance</div>
+        <div class="dash-card__amount" style="color:{% if total_balance < 0 %}var(--danger){% else %}var(--secondary){% endif %}">{{ total_balance }}</div>
       </div>
       <div class="dash-card">
-        <div class="dash-card__title">Active Alerts</div>
-        <div class="dash-card__amount" style="color:var(--danger)">{{ alerts.count }}</div>
-        <div class="dash-card__desc" style="color:var(--danger)">need attention</div>
+        <div class="dash-card__title">{{ current_month }} Income</div>
+        <div class="dash-card__amount" style="color:var(--secondary)">{{ month_income }}</div>
       </div>
       <div class="dash-card">
-        <div class="dash-card__title">Budgets On Track</div>
-        <div class="dash-card__amount">
-          {% with on_track=0 %}{{ budgets|length }}{% endwith %}
-        </div>
-        <div class="dash-card__desc">healthy</div>
+        <div class="dash-card__title">{{ current_month }} Expenses</div>
+        <div class="dash-card__amount" style="color:var(--danger)">{{ month_expense }}</div>
       </div>
     </div>
 

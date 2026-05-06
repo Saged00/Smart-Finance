@@ -1,0 +1,104 @@
+from django.db import models
+from django.conf import settings
+
+
+class Transaction(models.Model):
+    """Abstract base class for all financial activities.
+    Defines shared attributes (amount, date, description, paymentMethod)
+    and common operations inherited by Income and Expense."""
+
+    PAYMENT_CHOICES = [
+        ('cash',        'Cash'),
+        ('credit_card', 'Credit Card'),
+        ('debit_card',  'Debit Card'),
+        ('bank_transfer', 'Bank Transfer'),
+        ('e_wallet',    'E-Wallet'),
+        ('other',       'Other'),
+    ]
+
+    user           = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    amount         = models.DecimalField(max_digits=10, decimal_places=2)
+    date           = models.DateField()
+    description    = models.CharField(max_length=255)
+    payment_method = models.CharField(max_length=20, choices=PAYMENT_CHOICES, default='cash')
+    created_at     = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        abstract = True
+        ordering = ['-date', '-created_at']
+
+    def get_payment_display_text(self):
+        return dict(self.PAYMENT_CHOICES).get(self.payment_method, self.payment_method)
+
+    def __str__(self):
+        return f"{self.description} — ${self.amount}"
+
+
+class Income(Transaction):
+    """Concrete class for recording income transactions.
+    Extends Transaction and adds a source attribute (e.g., Salary, Freelance).
+    Persists income records to the database."""
+
+    SOURCE_CHOICES = [
+        ('salary',      'Salary'),
+        ('freelance',   'Freelance'),
+        ('investment',  'Investment'),
+        ('gift',        'Gift'),
+        ('bonus',       'Bonus'),
+        ('other',       'Other'),
+    ]
+
+    source = models.CharField(max_length=20, choices=SOURCE_CHOICES, default='salary')
+
+    class Meta:
+        ordering = ['-date', '-created_at']
+
+    def __str__(self):
+        return f"[Income] {self.description} — ${self.amount}"
+
+
+class Expense(Transaction):
+    """Concrete class for recording expense transactions.
+    Extends Transaction and adds optional notes.
+    Tracked against a Budget for spending analysis."""
+
+    notes  = models.TextField(blank=True, default='')
+    budget = models.ForeignKey(
+        'budgets.Budget',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='expenses',
+    )
+
+    class Meta:
+        ordering = ['-date', '-created_at']
+
+    def save(self, *args, **kwargs):
+        is_new = self.pk is None
+        old_amount = None
+        if not is_new:
+            old = Expense.objects.filter(pk=self.pk).first()
+            if old:
+                old_amount = old.amount
+        super().save(*args, **kwargs)
+        # Update budget spent amount
+        if self.budget:
+            if is_new:
+                self.budget.update_spent(self.amount)
+            elif old_amount is not None and old_amount != self.amount:
+                diff = self.amount - old_amount
+                self.budget.update_spent(diff)
+
+    def delete(self, *args, **kwargs):
+        # Reverse the budget spent amount before deleting
+        if self.budget:
+            self.budget.spent_amount -= self.amount
+            if self.budget.spent_amount < 0:
+                self.budget.spent_amount = 0
+            self.budget.status = self.budget.get_status()
+            self.budget.save()
+        super().delete(*args, **kwargs)
+
+    def __str__(self):
+        return f"[Expense] {self.description} — ${self.amount}"
