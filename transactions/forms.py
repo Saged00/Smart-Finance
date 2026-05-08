@@ -1,5 +1,6 @@
 from django import forms
 from .models import Income, Expense
+from budgets.models import Budget
 
 
 class TransactionForm(forms.Form):
@@ -28,11 +29,22 @@ class TransactionForm(forms.Form):
 
     kind        = forms.ChoiceField(choices=KIND_CHOICES)
     amount      = forms.DecimalField(max_digits=10, decimal_places=2, min_value=0.01)
-    category    = forms.CharField(max_length=100)
+    category    = forms.CharField(max_length=100, required=False)
     description = forms.CharField(max_length=255)
+    budget      = forms.ModelChoiceField(
+        queryset=Budget.objects.none(), 
+        required=True,
+        error_messages={'required': 'You must select a budget for this transaction.'}
+    )
     occurred_at = forms.DateTimeField(
         widget=forms.DateTimeInput(attrs={'type': 'datetime-local'})
     )
+
+    def __init__(self, *args, user=None, **kwargs):
+        """Initializes the form and filters budgets for the current user."""
+        super().__init__(*args, **kwargs)
+        if user:
+            self.fields['budget'].queryset = Budget.objects.filter(user=user)
 
     def clean_amount(self):
         """Validates that the transaction amount is a positive value."""
@@ -50,10 +62,20 @@ class IncomeForm(forms.ModelForm):
     """
     class Meta:
         model  = Income
-        fields = ['amount', 'date', 'description', 'payment_method', 'source']
+        fields = ['amount', 'date', 'description', 'payment_method', 'source', 'budget']
         widgets = {
             'date': forms.DateInput(attrs={'type': 'date'}),
         }
+
+    def __init__(self, *args, user=None, **kwargs):
+        """
+        Initializes the form and filters the budget queryset based on the 
+        provided user.
+        """
+        super().__init__(*args, **kwargs)
+        if user:
+            self.fields['budget'].queryset = self.fields['budget'].queryset.filter(user=user)
+        self.fields['budget'].required = False
 
     def clean_amount(self):
         """Ensures the income amount is greater than zero."""

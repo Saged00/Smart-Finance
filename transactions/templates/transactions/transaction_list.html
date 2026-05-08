@@ -18,8 +18,8 @@
       <ul class="navbar__links">
         <li><a href="{% url 'dashboard' %}"     class="navbar__link">Dashboard</a></li>
         <li><a href="{% url 'transactions' %}"  class="navbar__link active">Transactions</a></li>
-        <li><a href="{% url 'budget-alerts' %}" class="navbar__link">Budget Alerts</a></li>
         <li><a href="{% url 'budget-list' %}"   class="navbar__link">Budgets</a></li>
+        <li><a href="{% url 'budget-alerts' %}" class="navbar__link">Budget Alerts</a></li>
         <li><a href="{% url 'goals' %}"         class="navbar__link">Savings Goals</a></li>
         <li><a href="{% url 'reports' %}"       class="navbar__link">Reports</a></li>
       </ul>
@@ -28,7 +28,6 @@
           <div class="navbar__avatar">{{ user.full_name|slice:":2"|upper }}</div>
           <span class="navbar__user-name">{{ user.full_name|truncatewords:1 }}</span>
         </a>
-        <a href="{% url 'logout' %}" style="font-size:.85rem;color:#6b7280;margin-left:8px;">Logout</a>
       </div>
     </div>
   </nav>
@@ -67,9 +66,19 @@
         </div>
 
         <div class="tx-form-group">
-          <label class="tx-label">Category</label>
+          <label class="tx-label" id="categoryLabel">Category</label>
           <select name="category" id="categorySelect" class="tx-input" required>
             <option value="">---------</option>
+          </select>
+        </div>
+
+        <div class="tx-form-group">
+          <label class="tx-label">Budget</label>
+          <select name="budget" id="budgetSelect" class="tx-input">
+            <option value="">---------</option>
+            {% for b in form.fields.budget.queryset %}
+              <option value="{{ b.pk }}" {% if form.budget.value == b.pk|stringformat:"s" %}selected{% endif %}>{{ b.category }}</option>
+            {% endfor %}
           </select>
         </div>
 
@@ -137,7 +146,7 @@
   </main>
 
   <script>
-    // Income source categories
+    // Income source categories merged with budgets
     const incomeCategories = [
       { value: 'salary',     label: 'Salary' },
       { value: 'freelance',  label: 'Freelance' },
@@ -147,20 +156,32 @@
       { value: 'other',      label: 'Other' },
     ];
 
-    // Expense categories from user's budgets
-    const expenseCategories = [
-      {% for cat in budget_categories %}
-      { value: '{{ cat }}', label: '{{ cat }}' },
-      {% endfor %}
-      { value: 'other', label: 'Other' },
-    ];
 
     const kindSelect     = document.getElementById('kindSelect');
     const categorySelect = document.getElementById('categorySelect');
+    const categoryLabel  = document.getElementById('categoryLabel');
+    const budgetSelect   = document.getElementById('budgetSelect');
 
     function updateCategories() {
       const kind = kindSelect.value;
-      const cats = kind === 'income' ? incomeCategories : kind === 'expense' ? expenseCategories : [];
+      const cats = kind === 'income' ? incomeCategories : [];
+
+      const categoryGroup = categorySelect.closest('.tx-form-group');
+
+      if (kind === 'income') {
+          categoryLabel.textContent = 'Category';
+          categoryGroup.style.display = 'block';
+          categorySelect.required = true;
+          budgetSelect.required = true;
+      } else if (kind === 'expense') {
+          categoryGroup.style.display = 'none';
+          categorySelect.required = false;
+          budgetSelect.required = true;
+      } else {
+          categoryGroup.style.display = 'block';
+          categorySelect.required = true;
+          budgetSelect.required = true;
+      }
 
       categorySelect.innerHTML = '<option value="">---------</option>';
       cats.forEach(cat => {

@@ -19,25 +19,32 @@ def transaction_list_view(request):
     user_budgets = Budget.objects.filter(user=request.user)
 
     if request.method == 'POST':
-        form = TransactionForm(request.POST)
+        form = TransactionForm(request.POST, user=request.user)
         if form.is_valid():
             kind        = form.cleaned_data['kind']
             amount      = form.cleaned_data['amount']
             category    = form.cleaned_data['category']
             description = form.cleaned_data['description']
             occurred_at = form.cleaned_data['occurred_at']
+            budget      = form.cleaned_data.get('budget')
 
             if kind == 'income':
-                Income.objects.create(
+                income = Income(
                     user=request.user,
                     amount=amount,
                     date=occurred_at.date(),
                     description=description,
-                    source=category,
+                    budget=budget,
                 )
+                # Link source based on category selection
+                standard_sources = [s[0] for s in Income.SOURCE_CHOICES]
+                if category in standard_sources:
+                    income.source = category
+                else:
+                    income.source = 'other'
+                income.save()
             else:
-                # Automating budget synchronization
-                budget = user_budgets.filter(category=category).first()
+                # For expenses, budget selection is critical
                 expense = Expense(
                     user=request.user,
                     amount=amount,
@@ -49,7 +56,7 @@ def transaction_list_view(request):
 
             return redirect('transactions')
     else:
-        form = TransactionForm(initial={'occurred_at': timezone.now()})
+        form = TransactionForm(initial={'occurred_at': timezone.now()}, user=request.user)
 
     # Data Aggregation for the transaction feed
     incomes  = Income.objects.filter(user=request.user)
@@ -83,15 +90,12 @@ def transaction_list_view(request):
     total_income  = sum(i.amount for i in incomes)
     total_expense = sum(e.amount for e in expenses)
 
-    budget_categories = list(user_budgets.values_list('category', flat=True))
-
     return render(request, 'transactions/transaction_list.html', {
         'form':              form,
         'transactions':      all_transactions,
         'total_income':      total_income,
         'total_expense':     total_expense,
         'net_balance':       total_income - total_expense,
-        'budget_categories': budget_categories,
         'user':              request.user,
     })
 
@@ -101,7 +105,7 @@ def transaction_list_view(request):
 @login_required
 def income_create_view(request):
     """Processes the creation of a new income record via IncomeForm."""
-    form = IncomeForm(request.POST or None)
+    form = IncomeForm(request.POST or None, user=request.user)
     if request.method == 'POST' and form.is_valid():
         income      = form.save(commit=False)
         income.user = request.user
@@ -116,7 +120,7 @@ def income_create_view(request):
 def income_edit_view(request, pk):
     """Updates an existing income record while ensuring user ownership."""
     income = get_object_or_404(Income, pk=pk, user=request.user)
-    form   = IncomeForm(request.POST or None, instance=income)
+    form   = IncomeForm(request.POST or None, instance=income, user=request.user)
     if request.method == 'POST' and form.is_valid():
         form.save()
         return redirect('transactions')

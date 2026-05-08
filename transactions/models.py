@@ -57,9 +57,52 @@ class Income(Transaction):
     ]
 
     source = models.CharField(max_length=20, choices=SOURCE_CHOICES, default='salary')
+    budget = models.ForeignKey(
+        'budgets.Budget',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='incomes',
+    )
 
     class Meta:
         ordering = ['-date', '-created_at']
+
+    def save(self, *args, **kwargs):
+        """
+        Saves the income and synchronizes the associated budget.
+        
+        If linked to a budget, it increases the 'budget_amount' (allowance).
+        Calculates the difference if the amount is updated.
+        """
+        is_new = self.pk is None
+        old_amount = None
+        if not is_new:
+            old = Income.objects.filter(pk=self.pk).first()
+            if old:
+                old_amount = old.amount
+        
+        super().save(*args, **kwargs)
+        
+        if self.budget:
+            if is_new:
+                self.budget.budget_amount += self.amount
+                self.budget.save()
+            elif old_amount is not None and old_amount != self.amount:
+                diff = self.amount - old_amount
+                self.budget.budget_amount += diff
+                self.budget.save()
+
+    def delete(self, *args, **kwargs):
+        """
+        Removes the income and reverts the budget amount.
+        """
+        if self.budget:
+            self.budget.budget_amount -= self.amount
+            if self.budget.budget_amount < 0:
+                self.budget.budget_amount = 0
+            self.budget.save()
+        super().delete(*args, **kwargs)
 
     def __str__(self):
         return f"[Income] {self.description} — ${self.amount}"

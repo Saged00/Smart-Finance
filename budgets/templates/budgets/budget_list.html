@@ -22,9 +22,10 @@
         <li><a href="{% url 'reports' %}"       class="navbar__link">Reports</a></li>
       </ul>
       <div class="navbar__right">
-        <div class="navbar__avatar">{{ user.full_name|slice:":2"|upper }}</div>
-        <span class="navbar__user-name">{{ user.full_name }}</span>
-        <a href="{% url 'logout' %}" style="font-size:.85rem;color:#6b7280;margin-left:12px;">Logout</a>
+        <a href="{% url 'profile' %}" style="text-decoration: none; display: flex; align-items: center; gap: 8px;">
+          <div class="navbar__avatar">{{ user.full_name|slice:":2"|upper }}</div>
+          <span class="navbar__user-name">{{ user.full_name|truncatewords:1 }}</span>
+        </a>
       </div>
     </div>
   </nav>

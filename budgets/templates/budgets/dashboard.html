@@ -16,8 +16,8 @@
       <ul class="navbar__links">
         <li><a href="{% url 'dashboard' %}"      class="navbar__link active">Dashboard</a></li>
         <li><a href="{% url 'transactions' %}"   class="navbar__link">Transactions</a></li>
-        <li><a href="{% url 'budget-alerts' %}"  class="navbar__link">Budget Alerts</a></li>
         <li><a href="{% url 'budget-list' %}"    class="navbar__link">Budgets</a></li>
+        <li><a href="{% url 'budget-alerts' %}"  class="navbar__link">Budget Alerts</a></li>
         <li><a href="{% url 'goals' %}"         class="navbar__link">Savings Goals</a></li>
         <li><a href="{% url 'reports' %}"       class="navbar__link">Reports</a></li>
       </ul>
@@ -26,7 +26,6 @@
           <div class="navbar__avatar">{{ user.full_name|slice:":2"|upper }}</div>
           <span class="navbar__user-name">{{ user.full_name|truncatewords:1 }}</span>
         </a>
-        <a href="{% url 'logout' %}" style="font-size:.85rem;color:#6b7280;margin-left:8px;">Logout</a>
       </div>
     </div>
   </nav>
