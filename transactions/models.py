@@ -3,13 +3,7 @@ from django.conf import settings
 
 
 class Transaction(models.Model):
-    """
-    Abstract base class for all financial activities.
-    
-    Provides shared attributes including amount, date, description, and 
-    payment method. This class is not instantiated directly but serves 
-    as a template for Income and Expense models.
-    """
+    # Base transaction model
 
     PAYMENT_CHOICES = [
         ('cash',        'Cash'),
@@ -32,7 +26,7 @@ class Transaction(models.Model):
         ordering = ['-date', '-created_at']
 
     def get_payment_display_text(self):
-        """Returns the human-readable label for the selected payment method."""
+        # Display text for payment method
         return dict(self.PAYMENT_CHOICES).get(self.payment_method, self.payment_method)
 
     def __str__(self):
@@ -40,12 +34,7 @@ class Transaction(models.Model):
 
 
 class Income(Transaction):
-    """
-    Concrete class for recording income transactions.
-    
-    Inherits from Transaction and includes a specific source (e.g., Salary, Freelance)
-    to categorize incoming funds.
-    """
+    # Income model
 
     SOURCE_CHOICES = [
         ('salary',      'Salary'),
@@ -69,12 +58,7 @@ class Income(Transaction):
         ordering = ['-date', '-created_at']
 
     def save(self, *args, **kwargs):
-        """
-        Saves the income and synchronizes the associated budget.
-        
-        If linked to a budget, it increases the 'budget_amount' (allowance).
-        Calculates the difference if the amount is updated.
-        """
+        # Save income and update budget
         is_new = self.pk is None
         old_amount = None
         if not is_new:
@@ -94,9 +78,7 @@ class Income(Transaction):
                 self.budget.save()
 
     def delete(self, *args, **kwargs):
-        """
-        Removes the income and reverts the budget amount.
-        """
+        # Revert budget amount on delete
         if self.budget:
             self.budget.budget_amount -= self.amount
             if self.budget.budget_amount < 0:
@@ -109,13 +91,7 @@ class Income(Transaction):
 
 
 class Expense(Transaction):
-    """
-    Concrete class for recording expense transactions.
-    
-    Links to the Budget model to track spending progress. Overrides save 
-    and delete methods to maintain real-time synchronization with 
-    associated budget limits.
-    """
+    # Expense model
 
     notes  = models.TextField(blank=True, default='')
     budget = models.ForeignKey(
@@ -130,12 +106,7 @@ class Expense(Transaction):
         ordering = ['-date', '-created_at']
 
     def save(self, *args, **kwargs):
-        """
-        Saves the expense and synchronizes the associated budget.
-        
-        Calculates the difference if the amount is updated and updates 
-        the 'spent_amount' in the related Budget instance.
-        """
+        # Save expense and update budget spent
         is_new = self.pk is None
         old_amount = None
         if not is_new:
@@ -152,11 +123,7 @@ class Expense(Transaction):
                 self.budget.update_spent(diff)
 
     def delete(self, *args, **kwargs):
-        """
-        Removes the expense and reverts the spent amount in the associated budget.
-        
-        Ensures the budget's spent_amount remains accurate and updates its status.
-        """
+        # Revert spent amount on delete
         if self.budget:
             self.budget.spent_amount -= self.amount
             if self.budget.spent_amount < 0:

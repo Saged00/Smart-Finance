@@ -3,14 +3,9 @@ from django.db import models
 
 
 class UserManager(BaseUserManager):
-    """
-    Custom manager for the User model where email is the unique identifier
-    for authentication instead of usernames.
-    """
+    # Custom manager using email
     def create_user(self, email, full_name, password=None):
-        """
-        Creates and saves a User with the given email, full name, and password.
-        """
+        # Create normal user
         if not email:
             raise ValueError("Email is required")
         email = self.normalize_email(email)
@@ -20,9 +15,7 @@ class UserManager(BaseUserManager):
         return user
 
     def create_superuser(self, email, full_name, password):
-        """
-        Creates and saves a superuser with the given email, full name, and password.
-        """
+        # Create admin user
         user = self.create_user(email, full_name, password)
         user.is_staff     = True
         user.is_superuser = True
@@ -31,11 +24,7 @@ class UserManager(BaseUserManager):
 
 
 class User(AbstractBaseUser, PermissionsMixin):
-    """
-    Custom User model representing a system user.
-    Uses email as the primary login credential and includes fields for 
-    full name and administrative status.
-    """
+    # Custom User model
     email        = models.EmailField(unique=True)
     full_name    = models.CharField(max_length=150)
     is_active    = models.BooleanField(default=True)

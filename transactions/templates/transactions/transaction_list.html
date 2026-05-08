@@ -146,7 +146,7 @@
   </main>
 
   <script>
-    // Income source categories merged with budgets
+    // Categories
     const incomeCategories = [
       { value: 'salary',     label: 'Salary' },
       { value: 'freelance',  label: 'Freelance' },
@@ -191,7 +191,7 @@
         categorySelect.appendChild(opt);
       });
 
-      // Restore selected value if form was submitted with errors
+      // Restore selection
       const savedCat = '{{ form.category.value|default:"" }}';
       if (savedCat) {
         categorySelect.value = savedCat;
@@ -200,7 +200,7 @@
 
     kindSelect.addEventListener('change', updateCategories);
 
-    // Init on page load
+    // Initial call
     updateCategories();
   </script>
 

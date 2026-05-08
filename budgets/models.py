@@ -2,10 +2,7 @@ from django.db import models
 from django.conf import settings
 
 class Budget(models.Model):
-    """
-    Model representing a user's budget for a specific category.
-    Includes logic for tracking spending progress and determining financial status.
-    """
+    # Budget model
     STATUS_ON_TRACK   = 'on_track'
     STATUS_NEAR_LIMIT = 'near_limit'
     STATUS_EXCEEDED   = 'exceeded'
@@ -25,24 +22,17 @@ class Budget(models.Model):
     status          = models.CharField(max_length=20, choices=STATUS_CHOICES, default=STATUS_ON_TRACK)
 
     def get_percentage_used(self):
-        """
-        Calculates the percentage of the budget that has been spent.
-        """
+        # % of budget spent
         if self.budget_amount == 0:
             return 0
         return float(self.spent_amount / self.budget_amount * 100)
 
     def get_remaining(self):
-        """
-        Returns the remaining balance in the budget.
-        """
+        # Remaining balance
         return self.budget_amount - self.spent_amount
 
     def get_status(self):
-        """
-        Determines the budget status based on the spending percentage relative 
-        to the alert threshold.
-        """
+        # Get status based on spending
         pct = self.get_percentage_used()
         if pct >= 100:
             return self.STATUS_EXCEEDED
@@ -51,10 +41,7 @@ class Budget(models.Model):
         return self.STATUS_ON_TRACK
 
     def update_spent(self, amount):
-        """
-        Updates the spent amount, re-evaluates status, and triggers alerts.
-        Traceability: Links Budget logic to BudgetAlert generation.
-        """
+        # Update spent and check status
         self.spent_amount += amount
         self.status = self.get_status()
         self.save()
@@ -65,21 +52,14 @@ class Budget(models.Model):
 
 
 class BudgetAlert(models.Model):
-    """
-    Model for storing notifications triggered when a budget reaches 
-    certain thresholds.
-    """
+    # Budget alerts
     budget       = models.ForeignKey(Budget, on_delete=models.CASCADE, related_name='alerts')
     triggered_at = models.DateTimeField(auto_now_add=True)
     message      = models.TextField()
 
     @classmethod
     def check_and_fire(cls, budget):
-        """
-        Analyzes budget status and creates a new alert record if necessary.
-        Args:
-            budget (Budget): The budget instance to evaluate.
-        """
+        # Check if alert should be created
         status = budget.get_status()
         if status == Budget.STATUS_NEAR_LIMIT:
             msg = f"{budget.category}: {budget.get_percentage_used():.0f}% used — near limit."
