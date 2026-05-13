@@ -8,6 +8,8 @@
 
 ---
 
+![Smart Finance Dashboard](dashboard_preview.png)
+
 ## ✨ Key Features
 
 ### 🔐 Secure User Authentication
