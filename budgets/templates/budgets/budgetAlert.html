@@ -45,11 +45,11 @@
       </div>
       <div class="stat-card">
         <p class="stat-card__label">Total budget</p>
-        <p class="stat-card__value blue">${{ total_budget }}</p>
+        <p class="stat-card__value blue">${{ total_budget|floatformat:2 }}</p>
       </div>
       <div class="stat-card">
         <p class="stat-card__label">Total spent</p>
-        <p class="stat-card__value green">${{ total_spent }}</p>
+        <p class="stat-card__value green">${{ total_spent|floatformat:2 }}</p>
       </div>
       <div class="stat-card">
         <p class="stat-card__label">Budgets tracked</p>
@@ -99,7 +99,7 @@
                 {% if alert.budget.status == 'exceeded' %}danger
                 {% elif alert.budget.status == 'near_limit' %}warning
                 {% else %}success{% endif %}">
-                ${{ alert.budget.get_remaining }} left
+                ${{ alert.budget.get_remaining|floatformat:2 }} left
               </span>
             </div>
           </div>

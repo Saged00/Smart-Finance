@@ -41,15 +41,15 @@
     <div class="dashboard-stats">
       <div class="dash-card">
         <div class="dash-card__title">Total Balance</div>
-        <div class="dash-card__amount" style="color:{% if total_balance < 0 %}var(--danger){% else %}var(--secondary){% endif %}">{{ total_balance }}</div>
+        <div class="dash-card__amount" style="color:{% if total_balance < 0 %}var(--danger){% else %}var(--secondary){% endif %}">${{ total_balance|floatformat:2 }}</div>
       </div>
       <div class="dash-card">
         <div class="dash-card__title">{{ current_month }} Income</div>
-        <div class="dash-card__amount" style="color:var(--secondary)">{{ month_income }}</div>
+        <div class="dash-card__amount" style="color:var(--secondary)">${{ month_income|floatformat:2 }}</div>
       </div>
       <div class="dash-card">
         <div class="dash-card__title">{{ current_month }} Expenses</div>
-        <div class="dash-card__amount" style="color:var(--danger)">{{ month_expense }}</div>
+        <div class="dash-card__amount" style="color:var(--danger)">${{ month_expense|floatformat:2 }}</div>
       </div>
     </div>
 
@@ -60,7 +60,7 @@
         <div class="transaction-item">
           <div class="tx-info">
             <h4>{{ b.category }}</h4>
-            <p>${{ b.spent_amount }} / ${{ b.budget_amount }} — {{ b.get_status }}</p>
+            <p>${{ b.spent_amount|floatformat:2 }} / ${{ b.budget_amount|floatformat:2 }} — {{ b.get_status }}</p>
           </div>
           <div>
             <a href="{% url 'budget-edit' b.pk %}" style="font-size:.8rem;color:var(--primary);margin-right:8px;">Edit</a>

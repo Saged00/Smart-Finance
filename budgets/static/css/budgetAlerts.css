@@ -10,11 +10,13 @@
 }
 
 .stat-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
+  background: rgba(30, 41, 59, 0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
   border-radius: var(--radius-lg);
   padding: 20px 22px;
-  box-shadow: var(--shadow-xs);
+  box-shadow: var(--shadow-sm);
   transition: var(--transition);
 }
 
@@ -54,16 +56,18 @@
 
 /* Main Content Card */
 .content-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
+  background: rgba(30, 41, 59, 0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
   border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-xs);
+  box-shadow: var(--shadow-sm);
   overflow: hidden;
 }
 
 .content-card__header {
   padding: 20px 24px;
-  border-bottom: 1px solid var(--border-soft);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .content-card__header h2 {
@@ -79,7 +83,7 @@
   align-items: start;
   gap: 14px;
   padding: 20px 24px;
-  border-bottom: 1px solid var(--border-soft);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
   transition: var(--transition);
   position: relative;
 }
@@ -89,7 +93,7 @@
 }
 
 .notification-item:hover {
-  background: #fafbff;
+  background: rgba(255, 255, 255, 0.03);
 }
 
 .notification-item.unread::before {
@@ -157,7 +161,7 @@
 .progress-bar-track {
   flex: 1;
   height: 7px;
-  background: var(--border-soft);
+  background: rgba(255, 255, 255, 0.05);
   border-radius: 99px;
   overflow: hidden;
 }
@@ -167,9 +171,9 @@
   border-radius: 99px;
 }
 
-.progress-bar-fill.warning { background: linear-gradient(90deg, #f59e0b, #d97706); }
-.progress-bar-fill.danger { background: linear-gradient(90deg, #f87171, #e02424); }
-.progress-bar-fill.success { background: linear-gradient(90deg, #34d399, #0e9f6e); }
+.progress-bar-fill.warning { background: linear-gradient(90deg, var(--warning), #d97706); }
+.progress-bar-fill.danger { background: linear-gradient(90deg, var(--danger), #b91c1c); }
+.progress-bar-fill.success { background: linear-gradient(90deg, var(--secondary), #059669); }
 
 .progress-label {
   font-size: 0.75rem;

@@ -123,9 +123,10 @@ class Expense(Transaction):
                 self.budget.update_spent(diff)
 
     def delete(self, *args, **kwargs):
-        # Revert spent amount on delete
+        # Revert spent amount and budget balance on delete
         if self.budget:
             self.budget.spent_amount -= self.amount
+            self.budget.budget_amount += self.amount
             if self.budget.spent_amount < 0:
                 self.budget.spent_amount = 0
             self.budget.status = self.budget.get_status()

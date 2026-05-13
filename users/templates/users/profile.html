@@ -36,29 +36,38 @@
         <h1>My Profile</h1>
         <p>Manage your account details and preferences.</p>
       </div>
-      <a href="{% url 'logout' %}" class="btn" style="background: var(--danger); color: white; border: none;">Logout</a>
+      <a href="{% url 'logout' %}" class="btn" style="background: rgba(239, 68, 68, 0.15); color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.3); transition: all 0.2s;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+        Logout
+      </a>
     </header>
 
-    <div class="dashboard-grid" style="grid-template-columns: 1fr;">
-      <div class="content-box">
-        <h2>Account Information</h2>
-        <div class="transaction-item" style="border-bottom: 1px solid var(--border); padding-bottom: 15px;">
-          <div class="tx-info">
-            <h4 style="color: var(--text-muted); margin-bottom: 5px;">Full Name</h4>
-            <p style="font-size: 1.1rem; color: var(--text);">{{ user.full_name }}</p>
-          </div>
+    <div class="dashboard-grid" style="grid-template-columns: 1fr; max-width: 600px; margin: 0 auto;">
+      <div class="content-box" style="text-align: center; padding: 48px 32px; display: flex; flex-direction: column; align-items: center;">
+        
+        <div style="width: 110px; height: 110px; border-radius: 50%; background: linear-gradient(135deg, var(--primary), var(--secondary)); display: grid; place-items: center; color: white; font-size: 2.5rem; font-weight: 800; box-shadow: 0 12px 32px rgba(59, 130, 246, 0.4); margin-bottom: 24px; border: 4px solid var(--surface);">
+          {{ user.full_name|slice:":2"|upper }}
         </div>
-        <div class="transaction-item" style="border-bottom: 1px solid var(--border); padding-bottom: 15px;">
-          <div class="tx-info">
-            <h4 style="color: var(--text-muted); margin-bottom: 5px;">Email Address</h4>
-            <p style="font-size: 1.1rem; color: var(--text);">{{ user.email }}</p>
+        
+        <h2 style="font-size: 1.8rem; margin-bottom: 8px; border: none; padding: 0; color: var(--text-primary);">{{ user.full_name }}</h2>
+        <p style="color: var(--text-muted); font-size: 1.05rem; margin-bottom: 36px;">{{ user.email }}</p>
+
+        <div style="width: 100%; display: flex; flex-direction: column; gap: 16px; text-align: left;">
+          
+          <div class="transaction-item" style="border: 1px solid rgba(255, 255, 255, 0.05); padding: 16px 20px;">
+            <div class="tx-info">
+              <h4 style="color: var(--text-muted); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 6px;">Account Status</h4>
+              <p style="font-size: 1.1rem; color: var(--secondary); font-weight: 600;">Active</p>
+            </div>
           </div>
-        </div>
-        <div class="transaction-item">
-          <div class="tx-info">
-            <h4 style="color: var(--text-muted); margin-bottom: 5px;">Member Since</h4>
-            <p style="font-size: 1.1rem; color: var(--text);">{{ user.member_since|date:"F j, Y" }}</p>
+
+          <div class="transaction-item" style="border: 1px solid rgba(255, 255, 255, 0.05); padding: 16px 20px;">
+            <div class="tx-info">
+              <h4 style="color: var(--text-muted); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 6px;">Member Since</h4>
+              <p style="font-size: 1.1rem; color: var(--text-primary); font-weight: 600;">{{ user.member_since|date:"F j, Y" }}</p>
+            </div>
           </div>
+
         </div>
       </div>
     </div>

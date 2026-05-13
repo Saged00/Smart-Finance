@@ -45,7 +45,7 @@
       <div class="transaction-item">
         <div class="tx-info">
           <h4>{{ b.category }}</h4>
-          <p>${{ b.spent_amount }} spent of ${{ b.budget_amount }} — {{ b.get_status }}</p>
+          <p>${{ b.spent_amount|floatformat:2 }} spent | Remaining: ${{ b.budget_amount|floatformat:2 }} — {{ b.get_status }}</p>
         </div>
         <div style="display:flex;gap:10px;align-items:center;">
           <a href="{% url 'budget-edit' b.pk %}"

@@ -22,14 +22,15 @@ class Budget(models.Model):
     status          = models.CharField(max_length=20, choices=STATUS_CHOICES, default=STATUS_ON_TRACK)
 
     def get_percentage_used(self):
-        # % of budget spent
-        if self.budget_amount == 0:
+        # % of budget spent based on current balance + spent
+        total_capacity = self.budget_amount + self.spent_amount
+        if total_capacity <= 0:
             return 0
-        return float(self.spent_amount / self.budget_amount * 100)
+        return float(self.spent_amount / total_capacity * 100)
 
     def get_remaining(self):
-        # Remaining balance
-        return self.budget_amount - self.spent_amount
+        # Since budget_amount now acts as the remaining balance, we just return it
+        return self.budget_amount
 
     def get_status(self):
         # Get status based on spending
@@ -41,8 +42,9 @@ class Budget(models.Model):
         return self.STATUS_ON_TRACK
 
     def update_spent(self, amount):
-        # Update spent and check status
+        # Update spent, decrease budget_amount (acting as balance), and check status
         self.spent_amount += amount
+        self.budget_amount -= amount
         self.status = self.get_status()
         self.save()
         BudgetAlert.check_and_fire(self)
