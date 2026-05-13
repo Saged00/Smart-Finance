@@ -13,11 +13,19 @@
 ### 🔐 Secure User Authentication
 - Complete user registration, login, and secure session management using Django's built-in authentication system.
 - Custom user models tailored to store specific user financial profiles.
+- **Premium Profile Page:** A centralized, sleek dashboard for managing user settings and viewing financial summaries.
 
 ### 📊 Advanced Budget Tracking
 - **Create & Manage Budgets:** Users can define categories, allocate maximum budgets, and track their expenses seamlessly.
 - **Dynamic Status Tracking:** Budgets automatically calculate percentages and dynamically update their status (`On Track`, `Near Limit`, `Exceeded`).
 - **Automated Alerts:** If a user crosses a defined threshold (e.g., 80% of the allocated budget), the system automatically triggers a **Budget Alert** to notify the user.
+
+### 💸 Income & Expense Management
+- **Integrated Transactions:** Record both income and expenses with detailed descriptions and payment methods.
+- **Budget Synchronization:** 
+    - **Income:** Adding income to a specific budget category automatically increases its total limit.
+    - **Expenses:** Recording expenses automatically deducts from the relevant budget's remaining balance.
+- **Detailed History:** Track every financial movement with a clean, searchable transaction list.
 
 ### 🎯 Smart Savings Goals
 - **Goal Setting:** Users can set specific financial targets (e.g., "Buy a Car", "Emergency Fund") with a target deadline.
@@ -32,8 +40,12 @@
 
 ## 🎨 UI/UX Design
 
-The visual design and user experience of Smart Finance were meticulously crafted in Figma. 
-You can explore the complete design files here: **[Smart Finance Figma Design](https://www.figma.com/make/qOKDYbZLknZzAzZvMvhyHx/Smart-Finance?p=f&t=RmaGffP568j0J5dS-0&fullscreen=1)**
+The visual design and user experience of Smart Finance were meticulously crafted in Figma and implemented with a focus on premium aesthetics.
+
+- **Professional Dark Mode:** A stunning, high-contrast dark theme designed for better readability and a modern feel.
+- **Rich Aesthetics:** Implementation of **Glassmorphism**, smooth gradients, and subtle micro-animations for an interactive experience.
+- **Responsive Design:** Fully optimized for mobile, tablet, and desktop screens.
+- **Figma Files:** You can explore the complete design files here: **[Smart Finance Figma Design](https://www.figma.com/make/qOKDYbZLknZzAzZvMvhyHx/Smart-Finance?p=f&t=RmaGffP568j0J5dS-0&fullscreen=1)**
 
 ---
 
@@ -43,7 +55,7 @@ You can explore the complete design files here: **[Smart Finance Figma Design](h
 |-----------|-----------------|
 | **Backend Framework** | Django (Python 3.12+) |
 | **Database** | SQLite (Production-ready for PostgreSQL) |
-| **Frontend** | HTML5, Vanilla CSS, Django Template Language (DTL) |
+| **Frontend** | HTML5, Vanilla CSS, JavaScript |
 | **Architecture** | Model-View-Template (MVT) |
 
 ---
@@ -54,7 +66,8 @@ The application is built using a modular Django architecture, divided into speci
 
 - `config/` - Main Django configuration, settings, and root URL routing.
 - `users/` - Handles custom user models, authentication flows, and user sessions.
-- `budgets/` - Core financial engine managing budget allocations, expenses, status tracking, and automated threshold alerts.
+- `budgets/` - Core financial engine managing budget allocations and automated threshold alerts.
+- `transactions/` - Manages all financial movements, linking income and expenses to their respective budgets.
 - `goals/` - Manages long-term savings goals, calculating required monthly savings and tracking progress.
 
 ---
